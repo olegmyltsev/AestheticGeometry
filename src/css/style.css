@@ -1,0 +1,28 @@
+.load{
+    position: absolute;
+    left: 50px;
+    top:  5;
+    width: 100%;
+}
+
+#file1{
+    background: #a9ffa8;
+    border: none;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 10px;
+
+}
+
+#btn{
+    background: #a9ffa8;
+    border: none;
+    height: 40px;
+    font-size: 16px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+#dduCanvas{
+    margin-top: 50px;
+}
