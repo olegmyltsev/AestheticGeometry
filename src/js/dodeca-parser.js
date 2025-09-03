@@ -71,7 +71,7 @@ export function parseDdu(file) {
         }
     }
     addCircle();
-    console.log(`parsed ddu file into ${circles.length} circles`);
+    // console.log(`parsed ddu file into ${circles.length} circles`);
     return circles;
 }
 

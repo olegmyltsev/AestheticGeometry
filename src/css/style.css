@@ -1,21 +1,46 @@
-.load{
+
+
+body {
+    background: var(--cream-bg);
+}
+
+.load {
     position: absolute;
     left: 50px;
-    top:  5;
+    top: 5;
     width: 100%;
 }
 
-#file1{
-    background: #a9ffa8;
-    border: none;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 10px;
 
+.load-form__input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
 }
 
-#btn{
-    background: #a9ffa8;
+.load-form__container{
+    height: 50px;
+    display: block;
+    margin: 10px auto;
+    width: max-content;
+}
+
+.load-form__select-file{
+    display: inline-block;
+}
+
+.load-form__label{
+    background-color: var(--buttons);
+    display: inline-block;
+}
+
+
+
+#btn {
+    background: #4A4A4A;
     border: none;
     height: 40px;
     font-size: 16px;
@@ -23,6 +48,12 @@
     border-radius: 10px;
 }
 
-#dduCanvas{
+#start-icon {
+    width: 30px;
+    height: 30px;
+}
+
+#dduCanvas {
     margin-top: 50px;
+    border: rgba(102, 0, 0, 1) solid 2px;
 }
