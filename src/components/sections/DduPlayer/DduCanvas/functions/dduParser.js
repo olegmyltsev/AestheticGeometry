@@ -3,8 +3,8 @@ export class Circle{
         this.color = color;
         this.visible = visible;
         this.fill = fill;
-        this.x = x
-        this.y = y
+        this.x = x + 5000
+        this.y = y + 5000
         this.r = r
         this.r2 = this.r * this.r;
         this.rule = rule.split('').map((c) => parseInt(c));

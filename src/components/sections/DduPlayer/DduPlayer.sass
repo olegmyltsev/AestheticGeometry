@@ -4,7 +4,40 @@
     height: max-content
     background: colors.$bg-color
     width: 100%
+    overflow: auto
     &__container
-        width: 90px
-        height: 600px
+        box-sizing: border-box
         margin: 0 auto
+        margin-top: 10px
+        width: max-content
+    &__form
+        width: max-content
+        margin: 0 auto
+        *
+            font-family: Montserrat
+            font-weight: 400
+            font-style: normal
+            background: colors.$btn-color
+            color: #ffff
+            height: 35px
+            line-height: 35px
+            border-radius: 10px
+            text-align: center
+            display: inline-block
+            vertical-align: middle
+            font-size: 18px
+            border: none
+    &__file-input
+        position: absolute
+        opacity: 0
+        width: 0.1px
+        height: 0.1px
+        overflow: hidden
+        z-index: -1
+        &-label
+            width: 200px
+            background: colors.$btn-color
+    &__pause-btn
+        margin: 0 10px
+        width: 100px
+        background: #668800

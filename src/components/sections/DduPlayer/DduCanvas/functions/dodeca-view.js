@@ -53,7 +53,6 @@ function updateCircles(circles) {
 
 
 export function update(file, context) {
-    
     for (const circle of file) {
         circle.draw(context);
     }

@@ -1,4 +1,4 @@
-import DduPlayer from "./components/sections/DduPlayer/DduPlayer"
+import DduPlayer from "./components/sections/DduPlayer/DduPlayer.jsx"
 
 function App() {
   return (

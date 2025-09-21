@@ -4,7 +4,9 @@ import DduCanvas from "./DduCanvas/DduCanvas";
 
 
 
-function DduPlyer(props) {
+function DduPlayer(props) {
+    const [file, setFile] = useState('')
+    const [isPlaying, setIsPlayng] = useState(false)
 
     async function readFile(file) {
         if (typeof file != 'object') return;
@@ -29,20 +31,31 @@ function DduPlyer(props) {
         }
     }
 
-    const [file, setFile] = useState('')
-    const [isPlaying, setIsPlayng] = useState(false)
+    function togglePlaying() {
+        if (file === '') return
+        setIsPlayng(!isPlaying)
+    }
+
+
     return (
         <section className="DduPlayer">
             <div className="DduPlayer__container">
-                <div className="DduPlayer__input">
-                    <input type="file" onChange={async (event) => setFile(await readFile(event.target.files[0]))} />
-                    <button onClick={() => setIsPlayng(!isPlaying)}>play</button>
+                <div className="DduPlayer__form">
+                    <input
+                        id="dduFileInput"
+                        className="DduPlayer__file-input"
+                        type="file"
+                        onChange={async (event) => setFile(await readFile(event.target.files[0]))}
+                    />
+                    <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
+                    <button className="DduPlayer__pause-btn" onClick={togglePlaying}>play</button>
+
                 </div>
-                <DduCanvas file={file} isPlaying={isPlaying}/>
+                <DduCanvas file={file} isPlaying={isPlaying} />
             </div>
         </section>
     )
 
 }
 
-export default DduPlyer
+export default DduPlayer
