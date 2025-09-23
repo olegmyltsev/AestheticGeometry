@@ -70,7 +70,7 @@ export function parseDdu(file) {
             'x': readFloat(circleArr[1]),
             'y': readFloat(circleArr[2]),
             'color': readColor(circleArr[3]),
-            'fill': circleArr[4] === 'true' || circleArr[4] === '1',
+            'fill': circleArr[4] === 'true' || circleArr[4] === '1' || circleArr[4] === '-1',
             'visible': '',
             'rule': ''
         }

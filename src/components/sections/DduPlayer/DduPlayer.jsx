@@ -10,9 +10,9 @@ function DduPlayer(props) {
 
     async function readFile(file) {
         if (typeof file != 'object') return;
-        if (file.name.split('.').pop() !== 'ddu') {
+        if (file.name.split('.').pop().toLowerCase() !== 'ddu') {
             alert('Неизвестный тип файла.');
-            return;
+            return '';
         }
 
         try {
