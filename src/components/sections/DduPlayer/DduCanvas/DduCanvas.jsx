@@ -53,7 +53,10 @@ export default function DduCanvas(props) {
 
     useEffect(() => {
         document.addEventListener('fullscreenchange', (e)=>{
-            console.log(e);
+            if (document.fullscreenElement == null){
+                setCanvasWindowClass('DduCanvas')
+                
+            }
             
         })
         let scale = 1
