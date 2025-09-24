@@ -13,7 +13,7 @@ export default function DduCanvas(props) {
     const canvasWindowRef = useRef(null)
     let file = parseDdu(props.file)
     const timerId = useRef(null);
-
+    
 
     const [canvasWindowClass, setCanvasWindowClass] = useState('DduCanvas')
 
@@ -25,8 +25,29 @@ export default function DduCanvas(props) {
         }, 50);
     }
 
-    useEffect(() => {     
-        canvasWindowRef.current.scrollTo(5000-canvasWindowRef.current.offsetWidth/2, 5000-canvasWindowRef.current.offsetHeight/2)
+    function zoom() {      
+        let scale = 1  
+        canvasWindowRef.current.addEventListener('wheel', (e) => {
+            e.preventDefault()
+            if (scale < 0.2) {
+                scale = 0.2
+                return
+            } else if (scale > 3) {
+                scale = 3
+                return
+            }
+            if (e.deltaY > 0) {
+                scale -= 0.05
+            } else if (e.deltaY < 0) {
+                scale += 0.05
+
+            }
+            canvasRef.current.style.transform = 'scale(' + scale + ')'
+        })
+    }
+
+    useEffect(() => {
+        canvasWindowRef.current.scrollTo(5000 - canvasWindowRef.current.offsetWidth / 2, 5000 - canvasWindowRef.current.offsetHeight / 2)
 
         if (props.isPlaying & file.length !== 0) {
             start();
@@ -39,7 +60,7 @@ export default function DduCanvas(props) {
         };
     }, [props.isPlaying])
 
-    function fullScreenToggle() {  
+    function fullScreenToggle() {
         if (document.fullscreenElement == null) {
             canvasWindowRef.current.requestFullscreen()
             setCanvasWindowClass(canvasWindowClass + ' ' + canvasWindowClass + '_isFullscreen')
@@ -49,43 +70,36 @@ export default function DduCanvas(props) {
         }
     }
 
-    useEffect(() => { enableDragScroll(canvasWindowRef.current) }, [])
+    useEffect(() => {
+        enableDragScroll(canvasWindowRef.current, canvasRef.current)
+        zoom()
+    }, [])
 
     useEffect(() => {
-        document.addEventListener('fullscreenchange', (e)=>{
-            if (document.fullscreenElement == null){
+        document.addEventListener('fullscreenchange', (e) => {
+            if (document.fullscreenElement == null) {
                 setCanvasWindowClass('DduCanvas')
-                
+
             }
-            
+
         })
-        let scale = 1
-        canvasWindowRef.current.addEventListener('wheel', (e) => {
-            e.preventDefault()
-            console.log(e);
-            
-            if (scale < 0.2) {
-                scale = 0.2
-                return
-            } else if (scale > 3) {
-                scale = 3
-                return
-            }
-            
-            if (e.deltaY > 0) { scale -= Math.floor(0.05 * 100) / 100 } else if (e.deltaY < 0) { scale += Math.floor(0.05 * 100) / 100 }
-            canvasRef.current.style.transform = 'scale(' + scale + ')'
-        })
+
 
     }, [])
 
 
     return (
-        <div className={canvasWindowClass} ref={canvasWindowRef}>
+        <div
+            className={canvasWindowClass}
+            ref={canvasWindowRef}
+            
+        >
+
             <canvas
                 className="DduCanvas__canvas"
                 ref={canvasRef}
                 onDoubleClick={fullScreenToggle}
-                
+
                 id="dduCanvas"
                 width='10000px'
                 height='10000px'

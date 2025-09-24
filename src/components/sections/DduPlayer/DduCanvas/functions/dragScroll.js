@@ -1,4 +1,4 @@
-export default function enableDragScroll(element) {
+export default function enableDragScroll(element, chaild) {
     let isDragging = false;
     let startX, startY;
     let scrollLeft, scrollTop;
@@ -26,10 +26,17 @@ export default function enableDragScroll(element) {
         const x = e.pageX - element.offsetLeft;
         const y = e.pageY - element.offsetTop;
         
-        const walkX = (x - startX) * 2;
-        const walkY = (y - startY) * 2;
+        let scale = window.getComputedStyle(chaild).getPropertyValue('transform').split(',')[3]
+        const walkX = (x - startX) / scale;
+        const walkY = (y - startY) / scale;
         
         element.scrollLeft = scrollLeft - walkX;
         element.scrollTop = scrollTop - walkY;
+
+        chaild.style.transformOrigin = `${
+                    element.scrollLeft + element.offsetWidth / 2
+                }px ${
+                    element.scrollTop + element.offsetHeight / 2
+                }px`
     });
 }
