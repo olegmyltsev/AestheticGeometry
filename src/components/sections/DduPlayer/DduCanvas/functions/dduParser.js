@@ -56,7 +56,9 @@ function readColor(s) {
     return cssColor;
 }
 
-export function parseDdu(file) {
+export function parseDdu(file = '') {
+    if (!file.length) return
+    
     file = file.split('circle:')
     file.shift()
     let circle = {}
@@ -96,11 +98,3 @@ export function parseDdu(file) {
     return circles
 }
 
-// import fs from 'node:fs';
-// fs.readFile('/Oleg/Programming/Work/aesthetic-geometry/Asters.ddu', 'utf8', (err, data) => {
-//     if (err) {
-//         console.error(err);
-//         return;
-//     }
-//     console.log(myParseDdu(data))
-// });

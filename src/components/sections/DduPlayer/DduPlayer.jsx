@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
 
@@ -6,7 +6,7 @@ import DduCanvas from "./DduCanvas/DduCanvas";
 
 function DduPlayer(props) {
     const [file, setFile] = useState('')
-    const [isPlaying, setIsPlayng] = useState(false)
+    const [isPlaying, setIsPlaying] = useState(false)
 
     async function readFile(file) {
         if (typeof file != 'object') return;
@@ -33,9 +33,13 @@ function DduPlayer(props) {
 
     function togglePlaying() {
         if (file === '') return
-        setIsPlayng(!isPlaying)
+        setIsPlaying(!isPlaying)
     }
 
+    useEffect(() => {
+        if (file === '') return
+        setIsPlaying(true);
+    }, [file])
 
     return (
         <section className="DduPlayer">
@@ -45,7 +49,10 @@ function DduPlayer(props) {
                         id="dduFileInput"
                         className="DduPlayer__file-input"
                         type="file"
-                        onChange={async (event) => setFile(await readFile(event.target.files[0]))}
+                        onChange={async (event) => {
+                            const fileContent = await readFile(event.target.files[0]);
+                            setFile(fileContent);
+                        }}
                     />
                     <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
                     <button className="DduPlayer__pause-btn" onClick={togglePlaying}>play</button>
