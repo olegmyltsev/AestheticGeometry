@@ -4,6 +4,8 @@ export default function enableDragScroll(element, chaild) {
     let scrollLeft, scrollTop;
 
     element.addEventListener('mousedown', (e) => {
+        
+        
         isDragging = true;
         startX = e.pageX - element.offsetLeft;
         startY = e.pageY - element.offsetTop;
