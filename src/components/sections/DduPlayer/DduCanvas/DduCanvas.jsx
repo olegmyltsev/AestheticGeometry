@@ -91,7 +91,6 @@ export default function DduCanvas({ file, pause }) {
 
 
     useEffect(() => {
-        canvasWindowRef.current.focus()
         if (isPlaying && file.length !== 0) { start() } else clearTimeout(timerId.current);
     }, [isPlaying])
 

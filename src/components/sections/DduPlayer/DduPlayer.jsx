@@ -14,7 +14,7 @@ function DduPlayer(props) {
         if (typeof file != 'object') return;
         if (file.name.split('.').pop().toLowerCase() !== 'ddu') {
             alert('Неизвестный тип файла.');
-            return '';
+            return false;
         }
         setFileName(file.name)
         try {
@@ -28,30 +28,23 @@ function DduPlayer(props) {
             return content; // Вернет Promise, который разрешится в string
         } catch (error) {
             console.error('Ошибка чтения файла:', error);
-            alert(`Ошибка чтения файла:` + error)
+            alert(`Ошибка чтения файла`)
             throw error;
         }
     }
 
     function togglePlaying() {
-        if (file === '') return
+        if (!file) return
         setIsPlaying(!isPlaying)
+
     }
 
     useEffect(() => {
-        if (file === '') return
+        if (!file) return
         setIsPlaying(true);
-        
     }, [file])
 
-    useEffect(() => {
-        document.addEventListener('keypress', (e) => {
-            e.preventDefault()
-            if (e.key === ' ') {
-               togglePlaying()
-            }
-        })
-    })
+
     return (
         <section className="DduPlayer">
             <div className="DduPlayer__container">
@@ -62,7 +55,8 @@ function DduPlayer(props) {
                         type="file"
                         onChange={async (event) => {
                             const fileContent = await readFile(event.target.files[0]);
-                            setFile(parseDdu(fileContent));
+                            if (!fileContent) return
+                            setFile(parseDdu(fileContent))
                         }}
                     />
                     <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
