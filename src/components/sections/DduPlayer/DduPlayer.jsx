@@ -41,8 +41,17 @@ function DduPlayer(props) {
     useEffect(() => {
         if (file === '') return
         setIsPlaying(true);
+        
     }, [file])
 
+    useEffect(() => {
+        document.addEventListener('keypress', (e) => {
+            e.preventDefault()
+            if (e.key === ' ') {
+               togglePlaying()
+            }
+        })
+    })
     return (
         <section className="DduPlayer">
             <div className="DduPlayer__container">

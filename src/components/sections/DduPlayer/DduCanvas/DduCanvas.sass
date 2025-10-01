@@ -9,13 +9,12 @@
         overflow: auto
         scrollbar-width: thin
         scrollbar-color: #454545 #3535357e
-        scrollbar-gutter: auto
-
         &:hover
             cursor: grab
         &_isFullscreen
             &::-webkit-scrollbar
                 display: none
+            scrollbar-width: none
     &__canvas
         transform: translateX(0px)
         z-index: 0

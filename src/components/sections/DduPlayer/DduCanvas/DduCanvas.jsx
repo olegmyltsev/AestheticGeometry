@@ -50,7 +50,7 @@ export default function DduCanvas({ file, pause }) {
         }
         mouseHoverTimer.current = setTimeout(() => {
             setMouseMove(false)
-        }, 1000)
+        }, 1500)
     }
 
     function start() {
@@ -91,6 +91,7 @@ export default function DduCanvas({ file, pause }) {
 
 
     useEffect(() => {
+        canvasWindowRef.current.focus()
         if (isPlaying && file.length !== 0) { start() } else clearTimeout(timerId.current);
     }, [isPlaying])
 
