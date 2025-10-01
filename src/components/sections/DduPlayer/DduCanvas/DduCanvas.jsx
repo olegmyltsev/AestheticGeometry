@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { parseDdu } from "./functions/dduParser";
+import { useContext, useEffect, useRef, useState } from "react";
 import { update } from "./functions/dodeca-view";
 import "./DduCanvas.sass"
 import enableDragScroll from "./functions/dragScroll";
-
+import Toolbar from "./Toolbar/Toolbar";
+import { IsPlayingContext } from "../DduPlayer";
 
 function zoom(element, chaild) {
     let scale = 1
@@ -27,24 +27,43 @@ function zoom(element, chaild) {
 }
 
 
-export default function DduCanvas(props) {
+export default function DduCanvas({ file, pause }) {
     const canvasRef = useRef(null);
     const canvasWindowRef = useRef(null)
     const timerId = useRef(null);
+    const mouseHoverTimer = useRef(null)
+    const isPlaying = useContext(IsPlayingContext)
 
-    const [file, setFile] = useState('')
     const [canvasWindowClass, setCanvasWindowClass] = useState('DduCanvas__window')
+    const [isMouseMove, setMouseMove] = useState(false)
+
+    function mouseMoveHandle() {
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement == null) {
+                setMouseMove(false)
+                return
+            }
+        })
+        clearTimeout(mouseHoverTimer.current)
+        if (!isMouseMove) {
+            setMouseMove(true)
+        }
+        mouseHoverTimer.current = setTimeout(() => {
+            setMouseMove(false)
+        }, 1000)
+    }
 
     function start() {
+
         update(file, canvasRef.current.getContext('2d'))
         clearTimeout(timerId.current);
         timerId.current = setTimeout(() => {
-            if (props.isPlaying) { start(); }
+            if (isPlaying) { start(); }
         }, 50);
     }
 
     function fullScreenToggle() {
-        document.addEventListener('fullscreenchange', (e) => {
+        document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement == null) {
                 setCanvasWindowClass('DduCanvas__window')
             }
@@ -58,30 +77,37 @@ export default function DduCanvas(props) {
         }
     }
 
+    function centering() {
 
-
-    useEffect(() => {
-        if (props.isPlaying && file.length !== 0) { start() } else clearTimeout(timerId.current);
-    }, [props.isPlaying])
-
-    useEffect(() => {
         canvasWindowRef.current.scrollTo(
-            5000 - canvasWindowRef.current.offsetWidth / 2,
-            5000 - canvasWindowRef.current.offsetHeight / 2
+            canvasRef.current.offsetWidth / 2 - canvasWindowRef.current.offsetWidth / 2,
+            canvasRef.current.offsetHeight / 2 - canvasWindowRef.current.offsetHeight / 2
         )
+        canvasRef.current.style.transformOrigin = `${canvasWindowRef.current.scrollLeft + canvasWindowRef.current.offsetWidth / 2
+            }px ${canvasWindowRef.current.scrollTop + canvasWindowRef.current.offsetHeight / 2
+            }px`
+    }
+
+
+
+    useEffect(() => {
+        if (isPlaying && file.length !== 0) { start() } else clearTimeout(timerId.current);
+    }, [isPlaying])
+
+    useEffect(() => {
+        centering()
         enableDragScroll(canvasWindowRef.current, canvasRef.current)
         zoom(canvasWindowRef.current, canvasRef.current)
     }, [])
-
-    useEffect(() => { setFile(parseDdu(props.file)) }, [props.file])
 
     return (
         <div className="DduCanvas">
             <div
                 className={'DduCanvas__window ' + canvasWindowClass}
                 ref={canvasWindowRef}
+                onMouseMove={mouseMoveHandle}
             >
-
+                <Toolbar isActive={isMouseMove} fullScreen={fullScreenToggle} centering={centering} pause={pause} />
                 <canvas
                     className="DduCanvas__canvas"
                     ref={canvasRef}

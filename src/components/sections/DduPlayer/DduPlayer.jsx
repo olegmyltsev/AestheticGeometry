@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
+import { parseDdu } from "./DduCanvas/functions/dduParser";
 
-
+export const IsPlayingContext = createContext(false)
 
 function DduPlayer(props) {
     const [file, setFile] = useState('')
     const [isPlaying, setIsPlaying] = useState(false)
+    const [fileName, setFileName] = useState('Файл не выбран')
 
     async function readFile(file) {
         if (typeof file != 'object') return;
@@ -14,7 +16,7 @@ function DduPlayer(props) {
             alert('Неизвестный тип файла.');
             return '';
         }
-
+        setFileName(file.name)
         try {
             const content = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -51,14 +53,16 @@ function DduPlayer(props) {
                         type="file"
                         onChange={async (event) => {
                             const fileContent = await readFile(event.target.files[0]);
-                            setFile(fileContent);
+                            setFile(parseDdu(fileContent));
                         }}
                     />
                     <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
-                    <button className="DduPlayer__pause-btn" onClick={togglePlaying}>play</button>
+                    <span className="DduPlayer__file-name">{fileName}</span>
 
                 </div>
-                <DduCanvas file={file} isPlaying={isPlaying} />
+                <IsPlayingContext value={isPlaying} >
+                    <DduCanvas file={file} pause={togglePlaying} />
+                </IsPlayingContext>
             </div>
         </section>
     )
