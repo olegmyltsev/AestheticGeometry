@@ -38,7 +38,7 @@ function clone(obj) {
     return newInstance;
 }
 
-function updateCircles(circles) {
+async function  updateCircles(circles) {
     const newCircles = circles.map((circle) => clone(circle));
     for (const newCircle of newCircles) {
         for (const j of newCircle.rule) {
@@ -52,7 +52,7 @@ function updateCircles(circles) {
 }
 
 
-export function update(file, context) {
+export function update(file, context) {    
     for (const circle of file) {
         circle.draw(context);
     }

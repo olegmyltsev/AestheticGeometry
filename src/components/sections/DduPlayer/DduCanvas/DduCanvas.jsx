@@ -54,12 +54,25 @@ export default function DduCanvas({ file, pause }) {
     }
 
     function start() {
+        cancelAnimationFrame(timerId.current);
+        let lastTime = 0;
+        const interval = 50
 
-        update(file, canvasRef.current.getContext('2d'))
-        clearTimeout(timerId.current);
-        timerId.current = setTimeout(() => {
-            if (isPlaying) { start(); }
-        }, 50);
+        const loop = (timestamp) => {
+            if (!isPlaying) return;
+
+            if (timestamp - lastTime >= interval) {
+                update(file, canvasRef.current.getContext('2d'));
+                lastTime = timestamp;
+            }
+
+
+            timerId.current = requestAnimationFrame(loop);
+        };
+        if (isPlaying) {
+            timerId.current = requestAnimationFrame(loop);
+        }
+
     }
 
     function fullScreenToggle() {
@@ -91,7 +104,7 @@ export default function DduCanvas({ file, pause }) {
 
 
     useEffect(() => {
-        if (isPlaying && file.length !== 0) { start() } else clearTimeout(timerId.current);
+        if (isPlaying && file.length !== 0) { start() } else cancelAnimationFrame(timerId.current);
     }, [isPlaying])
 
     useEffect(() => {
