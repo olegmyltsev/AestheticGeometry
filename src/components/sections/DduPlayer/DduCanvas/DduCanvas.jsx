@@ -56,7 +56,7 @@ export default function DduCanvas({ file, pause }) {
     function start() {
         cancelAnimationFrame(timerId.current);
         let lastTime = 0;
-        const interval = 50
+        const interval = 500
 
         const loop = (timestamp) => {
             if (!isPlaying) return;
@@ -65,8 +65,6 @@ export default function DduCanvas({ file, pause }) {
                 update(file, canvasRef.current.getContext('2d'));
                 lastTime = timestamp;
             }
-
-
             timerId.current = requestAnimationFrame(loop);
         };
         if (isPlaying) {
