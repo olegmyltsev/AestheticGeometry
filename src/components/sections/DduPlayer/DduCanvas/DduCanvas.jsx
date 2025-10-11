@@ -9,8 +9,8 @@ function zoom(element, chaild) {
     let scale = 1
     element.addEventListener('wheel', (e) => {
         e.preventDefault()
-        if (scale < 0.2) {
-            scale = 0.2
+        if (scale < 0.5) {
+            scale = 0.5
             return
         } else if (scale > 3) {
             scale = 3
@@ -32,6 +32,7 @@ export default function DduCanvas({ file, pause }) {
     const canvasWindowRef = useRef(null)
     const timerId = useRef(null);
     const mouseHoverTimer = useRef(null)
+
     const isPlaying = useContext(IsPlayingContext)
 
     const [canvasWindowClass, setCanvasWindowClass] = useState('DduCanvas__window')
@@ -56,11 +57,9 @@ export default function DduCanvas({ file, pause }) {
     function start() {
         cancelAnimationFrame(timerId.current);
         let lastTime = 0;
-        const interval = 500
-
+        const interval = 50
         const loop = (timestamp) => {
             if (!isPlaying) return;
-
             if (timestamp - lastTime >= interval) {
                 update(file, canvasRef.current.getContext('2d'));
                 lastTime = timestamp;
@@ -89,11 +88,12 @@ export default function DduCanvas({ file, pause }) {
     }
 
     function centering() {
-
+        // скролл элемента
         canvasWindowRef.current.scrollTo(
             canvasRef.current.offsetWidth / 2 - canvasWindowRef.current.offsetWidth / 2,
             canvasRef.current.offsetHeight / 2 - canvasWindowRef.current.offsetHeight / 2
         )
+        // Измененение цетра трансформаций
         canvasRef.current.style.transformOrigin = `${canvasWindowRef.current.scrollLeft + canvasWindowRef.current.offsetWidth / 2
             }px ${canvasWindowRef.current.scrollTop + canvasWindowRef.current.offsetHeight / 2
             }px`
@@ -124,8 +124,8 @@ export default function DduCanvas({ file, pause }) {
                     ref={canvasRef}
                     onDoubleClick={fullScreenToggle}
                     id="dduCanvas"
-                    width='10000px'
-                    height='10000px'
+                    width='6000px'
+                    height='3000px'
                 ></canvas>
             </div>
         </div>
