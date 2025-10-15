@@ -58,11 +58,14 @@ function DduPlayer(props) {
             <div className="DduPlayer__container">
                 <div className="DduPlayer__form">
                     <input // Кнопка выбора файла
+                        onClick={()=>setIsPlaying(false)}
                         id="dduFileInput"
                         className="DduPlayer__file-input"
                         type="file"
                         onChange={async (event) => {
                             // Начинается чтение сразу при выборе файла
+                            if(!event.target.files[0]) return
+                            
                             const fileContent = await readFile(event.target.files[0]);
                             if (!fileContent) return // Если файл пустой, выход
                             setFile(parseDdu(fileContent)) // Или обновляется состояние

@@ -7,14 +7,12 @@
         box-sizing: border-box
         height: 600px
         overflow: auto
-        scrollbar-width: thin
-        scrollbar-color: #454545 #3535357e
+        scrollbar-width: none
+        &::-webkit-scrollbar
+            display: none
         &:hover
             cursor: grab
-        &_isFullscreen
-            &::-webkit-scrollbar
-                display: none
-            scrollbar-width: none
+
     &__canvas
         transform: translateX(0px)
         z-index: 0

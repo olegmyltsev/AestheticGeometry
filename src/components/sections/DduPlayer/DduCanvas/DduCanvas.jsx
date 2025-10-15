@@ -35,8 +35,11 @@ export default function DduCanvas({ file, pause }) {
 
     const isPlaying = useContext(IsPlayingContext)
 
-    const [canvasWindowClass, setCanvasWindowClass] = useState('DduCanvas__window')
     const [isMouseMove, setMouseMove] = useState(false)
+
+    function cleanCanvas() {
+        canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
 
     function mouseMoveHandle() {
         document.addEventListener('fullscreenchange', () => {
@@ -47,9 +50,13 @@ export default function DduCanvas({ file, pause }) {
         })
         clearTimeout(mouseHoverTimer.current)
         if (!isMouseMove) {
+            canvasWindowRef.current.style.cursor = ""
             setMouseMove(true)
         }
         mouseHoverTimer.current = setTimeout(() => {
+            if (document.fullscreenElement !== null) {
+                canvasWindowRef.current.style.cursor = "none"
+            }
             setMouseMove(false)
         }, 1500)
     }
@@ -72,19 +79,8 @@ export default function DduCanvas({ file, pause }) {
 
     }
 
-    function fullScreenToggle() {
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement == null) {
-                setCanvasWindowClass('DduCanvas__window')
-            }
-        })
-        if (document.fullscreenElement == null) {
-            canvasWindowRef.current.requestFullscreen()
-            setCanvasWindowClass(canvasWindowClass + '_isFullscreen')
-        } else {
-            document.exitFullscreen()
-            setCanvasWindowClass('')
-        }
+    function fullScreenToggle(element) {
+        document.fullscreenElement == null ? element.requestFullscreen() : document.exitFullscreen()
     }
 
     function centering() {
@@ -114,15 +110,15 @@ export default function DduCanvas({ file, pause }) {
     return (
         <div className="DduCanvas">
             <div
-                className={'DduCanvas__window ' + canvasWindowClass}
+                className='DduCanvas__window'
                 ref={canvasWindowRef}
                 onMouseMove={mouseMoveHandle}
             >
-                <Toolbar isActive={isMouseMove} fullScreen={fullScreenToggle} centering={centering} pause={pause} />
+                <Toolbar isActive={isMouseMove} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} />
                 <canvas
                     className="DduCanvas__canvas"
                     ref={canvasRef}
-                    onDoubleClick={fullScreenToggle}
+                    onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
                     id="dduCanvas"
                     width='6000px'
                     height='3000px'
