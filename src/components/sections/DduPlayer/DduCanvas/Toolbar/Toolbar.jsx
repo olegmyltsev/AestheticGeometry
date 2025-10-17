@@ -4,10 +4,11 @@ import { IsPlayingContext } from '../../DduPlayer'
 
 
 
-export default function Toolbar({ isActive, fullScreen, centering, pause, cleanCanvas}) {
+export default function Toolbar({ isActive, fullScreen, centering, pause, cleanCanvas, setCentering, isCentering }) {
     const isPlaying = useContext(IsPlayingContext)
     const Toolbar = useRef(null)
     const [isHover, setIsHover] = useState(false)
+
 
     useEffect(() => {
         document.addEventListener('fullscreenchange', () => {
@@ -18,7 +19,7 @@ export default function Toolbar({ isActive, fullScreen, centering, pause, cleanC
             }
         })
     }, [])
-    
+
     useEffect(() => {
         if (document.fullscreenElement == null) return
         !isActive && !isHover ? Toolbar.current.style.transform = 'translateY(100%)' : Toolbar.current.style.transform = ''
@@ -27,21 +28,26 @@ export default function Toolbar({ isActive, fullScreen, centering, pause, cleanC
 
     return (
         <div className="Toolbar" ref={Toolbar} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
-            <button className="Toolbar__btn" onClick={fullScreen}>
+            <button className="Toolbar__btn" title='Выбрать центр рисунка' onClick={() => {setCentering(!isCentering)}}>
+                <svg viewBox="0 0 24 24">
+                    <path d="M18.2848192,17.5777124 L20.8535534,20.1464466 C21.0488155,20.3417088 21.0488155,20.6582912 20.8535534,20.8535534 C20.6582912,21.0488155 20.3417088,21.0488155 20.1464466,20.8535534 L17.5777124,18.2848192 L15.9160251,20.7773501 C15.6899572,21.116452 15.1749357,21.0571624 15.0318354,20.6755617 L12.0318354,12.6755617 C11.8811067,12.2736185 12.2736185,11.8811067 12.6755617,12.0318354 L20.6755617,15.0318354 C21.0571624,15.1749357 21.116452,15.6899572 20.7773501,15.9160251 L18.2848192,17.5777124 Z M17.2312404,17.0782479 L19.4104716,15.6254271 L13.3544004,13.3544004 L15.6254271,19.4104716 L17.0782479,17.2312404 C17.0974475,17.2011742 17.1201804,17.1727128 17.1464466,17.1464466 C17.1727128,17.1201804 17.2011742,17.0974475 17.2312404,17.0782479 L17.2312404,17.0782479 Z M11.5,20 C11.7761424,20 12,20.2238576 12,20.5 C12,20.7761424 11.7761424,21 11.5,21 L5.5,21 C4.11928813,21 3,19.8807119 3,18.5 L3,5.48612181 C3,4.10540994 4.11928813,2.98612181 5.5,2.98612181 L18.5,2.98612181 C19.8807119,2.98612181 21,4.10540994 21,5.48612181 L21,11.5 C21,11.7761424 20.7761424,12 20.5,12 C20.2238576,12 20,11.7761424 20,11.5 L20,5.48612181 C20,4.65769469 19.3284271,3.98612181 18.5,3.98612181 L5.5,3.98612181 C4.67157288,3.98612181 4,4.65769469 4,5.48612181 L4,18.5 C4,19.3284271 4.67157288,20 5.5,20 L11.5,20 Z" fill='#fff' stroke={
+                        isCentering? '#fff' : 'none'
+                    }/>
+                </svg>
+            </button>
+            <button title='На весь экран' className="Toolbar__btn" onClick={fullScreen}>
                 <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
                     <path d="M9.00002 3.99998H4.00004L4 9M20 8.99999V4L15 3.99997M15 20H20L20 15M4 15L4 20L9.00002 20" stroke="#ffffffff" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
             </button>
-            <button className="Toolbar__btn Toolbar__btn-pause" onClick={pause}>
-                {isPlaying ? <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
-                    <rect x="8" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" />
-                    <rect x="13" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" />
-                </svg> : <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
-                    <path d="M8 5V19L19 12L8 5Z" stroke="#71ff69ff" strokeWidth="1.5" fill="none" strokeLinejoin="round" />
-                </svg>
-                }
+            <button title='Приостановить' className="Toolbar__btn Toolbar__btn-pause" onClick={pause}>
+                <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
+                    {isPlaying ? <g> <rect x="8" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" />
+                    <rect x="13" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" /> </g> :
+                     <path d="M8 5V19L19 12L8 5Z" stroke="#71ff69ff" strokeWidth="1.5" fill="none" strokeLinejoin="round" />}
+                </svg>  
             </button>
-            <button className="Toolbar__btn" onClick={centering}>
+            <button title='Центрировать' className="Toolbar__btn" onClick={centering}>
                 <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
                     <path d="M12 8L12 4M12 8L10 6M12 8L14 6" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
                     <path d="M12 16L12 20M12 16L10 18M12 16L14 18" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
@@ -50,15 +56,10 @@ export default function Toolbar({ isActive, fullScreen, centering, pause, cleanC
                     <circle cx="12" cy="12" r="1.5" fill="#ffffff" />
                 </svg>
             </button>
-            <button className="Toolbar__btn" onClick={cleanCanvas}>
-                <svg width="25px" height="25px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                    <g>
-                        <path d="M24,29H8.05a1,1,0,0,1-1-.95l-1-20a1.06,1.06,0,0,1,.27-.74A1,1,0,0,1,7,7H25a1,1,0,0,1,.73.31,1.06,1.06,0,0,1,.27.74L25,28.05A1,1,0,0,1,24,29ZM9,27H23L24,9H8.05Z" fill="white" />
-                        <rect x="3" y="7" width="26" height="2" fill="white" />
-                        <path d="M21,8.24l-.62-2.48a1,1,0,0,0-1-.76H12.56a1,1,0,0,0-1,.76L11,8.24,9,7.76l.62-2.49A3,3,0,0,1,12.56,3h6.88a3,3,0,0,1,2.91,2.27L23,7.76Z" fill="white" />
-                        <line x1="12" y1="13" x2="20" y2="21" stroke="white" strokeWidth="2" />
-                        <line x1="20" y1="13" x2="12" y2="21" stroke="white" strokeWidth="2" />
-                    </g>
+            <button title='Очистить' className="Toolbar__btn Toolbar__btn-cross" onClick={cleanCanvas}>
+                <svg viewBox="0 0 24 24" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
             </button>
         </div>

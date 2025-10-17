@@ -5,7 +5,11 @@
     background: colors.$bg-color
     max-width: 100vw
     overflow: auto
+    scrollbar-width: none
     padding: 0 10px
+    &::-webkit-scrollbar
+        display: none
+
     &__container
         box-sizing: border-box
         margin: 0 auto

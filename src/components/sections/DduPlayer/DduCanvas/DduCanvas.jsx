@@ -36,6 +36,8 @@ export default function DduCanvas({ file, pause }) {
     const isPlaying = useContext(IsPlayingContext)
 
     const [isMouseMove, setMouseMove] = useState(false)
+    const [dduCenter, setDduCenter] = useState([0, 0])
+    const [isCentering, setCentering] = useState(false)
 
     function cleanCanvas() {
         canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -68,7 +70,7 @@ export default function DduCanvas({ file, pause }) {
         const loop = (timestamp) => {
             if (!isPlaying) return;
             if (timestamp - lastTime >= interval) {
-                update(file, canvasRef.current.getContext('2d'));
+                update(file, canvasRef.current.getContext('2d'), dduCenter);
                 lastTime = timestamp;
             }
             timerId.current = requestAnimationFrame(loop);
@@ -97,6 +99,8 @@ export default function DduCanvas({ file, pause }) {
 
 
 
+
+
     useEffect(() => {
         if (isPlaying && file.length !== 0) { start() } else cancelAnimationFrame(timerId.current);
     }, [isPlaying])
@@ -105,6 +109,7 @@ export default function DduCanvas({ file, pause }) {
         centering()
         enableDragScroll(canvasWindowRef.current, canvasRef.current)
         zoom(canvasWindowRef.current, canvasRef.current)
+        setDduCenter([canvasRef.current.width / 2, canvasRef.current.height / 2])
     }, [])
 
     return (
@@ -113,12 +118,29 @@ export default function DduCanvas({ file, pause }) {
                 className='DduCanvas__window'
                 ref={canvasWindowRef}
                 onMouseMove={mouseMoveHandle}
+
+
             >
-                <Toolbar isActive={isMouseMove} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} />
+                <Toolbar isActive={isMouseMove} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} setCentering={setCentering} isCentering={isCentering} />
                 <canvas
+                    // onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
                     className="DduCanvas__canvas"
                     ref={canvasRef}
-                    onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
+                    onClick={(e) => {
+                        if (!isCentering) return
+                        pause()
+
+                        let scale = window.getComputedStyle(canvasRef.current).getPropertyValue('transform').split(',')[3]
+                        const rect = e.target.getBoundingClientRect();
+                        const x = (rect.left / scale - e.clientX / scale) * -1
+                        const y = (rect.top / scale - e.clientY / scale) * -1
+                        const transformX = dduCenter[0] + canvasRef.current.width / 2 - x
+                        const transformY = dduCenter[1] + canvasRef.current.height / 2 - y
+
+                        setDduCenter([transformX, transformY])
+
+                        setCentering(false)
+                    }}
                     id="dduCanvas"
                     width='6000px'
                     height='3000px'

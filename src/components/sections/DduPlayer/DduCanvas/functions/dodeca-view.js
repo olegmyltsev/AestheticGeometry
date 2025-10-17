@@ -52,9 +52,9 @@ async function  updateCircles(circles) {
 }
 
 
-export function update(file, context) {    
+export function update(file, context, center) {    
     for (const circle of file) {
-        circle.draw(context);
+        circle.draw(context, center);
     }
     updateCircles(file);
 }

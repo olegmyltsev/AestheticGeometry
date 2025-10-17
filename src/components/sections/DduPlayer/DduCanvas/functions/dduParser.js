@@ -3,8 +3,8 @@ export class Circle{
         this.color = color;
         this.visible = visible;
         this.fill = fill;
-        this.x = x + 3000
-        this.y = y + 1500
+        this.x = x
+        this.y = y
         this.r = r
         this.r2 = r * r;
         this.rule = rule.split('').map((c) => parseInt(c));
@@ -29,10 +29,10 @@ export class Circle{
     }
 
     // Отрисовывает сгенерированные круги в canvas
-    draw(context) {
+    draw(context, center=[3000, 1500]) {
         if (this.visible) {
             context.beginPath();
-            context.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+            context.arc(this.x+center[0], this.y+center[1], this.r, 0, 2 * Math.PI, false);
             if (this.fill) {
                 context.fillStyle = this.color;
                 context.fill();
