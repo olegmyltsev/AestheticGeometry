@@ -29,7 +29,7 @@ export class Circle{
     }
 
     // Отрисовывает сгенерированные круги в canvas
-    draw(context, center=[3000, 1500]) {
+    draw(context, center=[400.0, 640.0]) {
         if (this.visible) {
             context.beginPath();
             context.arc(this.x+center[0], this.y+center[1], this.r, 0, 2 * Math.PI, false);

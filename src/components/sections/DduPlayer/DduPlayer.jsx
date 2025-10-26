@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
-import { parseDdu } from "./DduCanvas/functions/dduParser";
+import { parseDdu } from "./DduCanvas/functions/dodeca-parser.js";
 
 
 // Глобальный IsPlaying
@@ -11,7 +11,7 @@ function DduPlayer(props) {
     const [file, setFile] = useState('') // Состояние файла
     const [isPlaying, setIsPlaying] = useState(false) // Проигрывается ли?
     const [fileName, setFileName] = useState('Файл не выбран') // Имя файла для отображения на сайте
-    
+
     async function readFile(file) {
         // Проверка типа файла
         if (file.name.split('.').pop().toLowerCase() !== 'ddu') {
@@ -20,7 +20,7 @@ function DduPlayer(props) {
         }
         setFileName(file.name) // Изменение имени
 
-        
+
         try {
             // Асинхронное чтение файла
             const content = await new Promise((resolve, reject) => {
@@ -35,14 +35,14 @@ function DduPlayer(props) {
             console.error('Ошибка чтения файла:', error);
             alert(`Ошибка чтения файла`)
             throw error; // Или ошибку
-        } 
+        }
     }
-    
+
     //  Функция пуск/пауза
     function togglePlaying() {
-        if (!file){ // Проверка на пустой файл
+        if (!file) { // Проверка на пустой файл
             setIsPlaying(false)
-            
+
         } else setIsPlaying(!isPlaying)
     }
 
@@ -50,6 +50,7 @@ function DduPlayer(props) {
     useEffect(() => {
         if (!file) return
         setIsPlaying(true);
+
     }, [file])
 
 
@@ -58,17 +59,17 @@ function DduPlayer(props) {
             <div className="DduPlayer__container">
                 <div className="DduPlayer__form">
                     <input // Кнопка выбора файла
-                        onClick={()=>setIsPlaying(false)}
+                        onClick={() => setIsPlaying(false)}
                         id="dduFileInput"
                         className="DduPlayer__file-input"
                         type="file"
                         onChange={async (event) => {
                             // Начинается чтение сразу при выборе файла
-                            if(!event.target.files[0]) return
-                            
+                            if (!event.target.files[0]) return
+
                             const fileContent = await readFile(event.target.files[0]);
-                            if (!fileContent) return // Если файл пустой, выход
-                            setFile(parseDdu(fileContent)) // Или обновляется состояние
+                            if (!fileContent) return // Если файл пустой, выход  
+                            setFile(parseDdu(fileContent)) // Или обновляется состояние                         
                         }}
                     />
                     <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
@@ -76,7 +77,7 @@ function DduPlayer(props) {
 
                 </div>
                 <IsPlayingContext value={isPlaying} >
-                    <DduCanvas file={file} pause={togglePlaying /*Файл и функция паузы прокидываются вниз */} /> 
+                    <DduCanvas file={file} pause={togglePlaying /*Файл и функция паузы прокидываются вниз */} />
                 </IsPlayingContext>
             </div>
         </section>

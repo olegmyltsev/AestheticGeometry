@@ -36,7 +36,7 @@ export default function DduCanvas({ file, pause }) {
     const isPlaying = useContext(IsPlayingContext)
 
     const [isMouseMove, setMouseMove] = useState(false)
-    const [dduCenter, setDduCenter] = useState([0, 0])
+    const [dduCenter, setDduCenter] = useState([400, 640])
     const [isCentering, setCentering] = useState(false)
 
     function cleanCanvas() {
@@ -70,7 +70,7 @@ export default function DduCanvas({ file, pause }) {
         const loop = (timestamp) => {
             if (!isPlaying) return;
             if (timestamp - lastTime >= interval) {
-                update(file, canvasRef.current.getContext('2d'), dduCenter);
+                update(file.circles, canvasRef.current.getContext('2d'), dduCenter);
                 lastTime = timestamp;
             }
             timerId.current = requestAnimationFrame(loop);
@@ -102,15 +102,30 @@ export default function DduCanvas({ file, pause }) {
 
 
     useEffect(() => {
-        if (isPlaying && file.length !== 0) { start() } else cancelAnimationFrame(timerId.current);
+        if (isPlaying && file.circles.length !== 0) {
+            console.log(file.bestCenter);
+            if (file.bestCenter !== null) {
+                setDduCenter([
+                    (canvasRef.current.width - canvasWindowRef.current.offsetWidth - file.bestCenter.x) / 2,
+                    (canvasRef.current.height - canvasWindowRef.current.offsetHeight - file.bestCenter.y) / 2
+                ])
+            }
+            start()
+
+        } else cancelAnimationFrame(timerId.current);
     }, [isPlaying])
 
     useEffect(() => {
         centering()
         enableDragScroll(canvasWindowRef.current, canvasRef.current)
         zoom(canvasWindowRef.current, canvasRef.current)
-        setDduCenter([canvasRef.current.width / 2, canvasRef.current.height / 2])
+        setDduCenter([
+            (canvasRef.current.width - canvasWindowRef.current.offsetWidth - dduCenter[0]) / 2,
+            (canvasRef.current.height - canvasWindowRef.current.offsetHeight - dduCenter[1]) / 2
+        ])
     }, [])
+
+
 
     return (
         <div className="DduCanvas">
