@@ -36,18 +36,51 @@ async function updateCircles(circles) {
 
 }
 
+function draw(circle, context, shapeMethod) {
+    context.beginPath();
+    shapeMethod(context, circle)
+    if (circle.fill) {
+        context.fillStyle = circle.color;
+        context.fill();
+    }
+    context.strokeStyle = circle.color;
+    context.stroke();
+}
 
-export function update(file, context, center) {
+export function update(file, context, center, shape) {
     for (const circle of file) {
         if (circle.visible) {
-            context.beginPath();
-            context.arc(circle.x  + center[0], circle.y  + center[1], circle.r, 0, 2 * Math.PI, false);
-            if (circle.fill) {
-                context.fillStyle = circle.color;
-                context.fill();
+            if (shape === "SQUARE") {
+                function shapeMethod(context, circle) {
+                    context.rect(circle.x + center[0] - circle.r, circle.y + center[1] - circle.r, circle.r * 2, circle.r * 2)
+                }
+                draw(circle, context, shapeMethod)
+            } else if (shape === "CROSS") {
+                function shapeMethod(context, circle) {
+                    context.moveTo(circle.x + center[0] - circle.r, circle.y + center[1]);
+                    context.lineTo(circle.x + center[0] + circle.r, circle.y + center[1]);
+                    context.moveTo(circle.x + center[0], circle.y + center[1] - circle.r);
+                    context.lineTo(circle.x + center[0], circle.y + center[1] + circle.r);
+                }
+                draw(circle, context, shapeMethod)
+            } else if (shape === "VERTICAL_BAR") {
+                function shapeMethod(context, circle) {
+                    context.moveTo(circle.x + center[0], circle.y + center[1] - circle.r);
+                    context.lineTo(circle.x + center[0], circle.y + center[1] + circle.r);
+                }
+                draw(circle, context, shapeMethod)
+            } else if (shape === "HORIZONTAL_BAR") {
+                function shapeMethod(context, circle) {
+                    context.moveTo(circle.x + center[0] - circle.r, circle.y + center[1]);
+                    context.lineTo(circle.x + center[0] + circle.r, circle.y + center[1]);
+                }
+                draw(circle, context, shapeMethod)
+            } else {
+                function shapeMethod(context, circle) {
+                    context.arc(circle.x + center[0], circle.y + center[1], circle.r, 0, 2 * Math.PI, false);
+                }
+                draw(circle, context, shapeMethod)
             }
-            context.strokeStyle = circle.color;
-            context.stroke();
         }
     }
     updateCircles(file);

@@ -64,13 +64,17 @@ export default function DduCanvas({ file, pause }) {
     }
 
     function start() {
+
         cancelAnimationFrame(timerId.current);
         let lastTime = 0;
         const interval = 50
         const loop = (timestamp) => {
             if (!isPlaying) return;
             if (timestamp - lastTime >= interval) {
-                update(file.circles, canvasRef.current.getContext('2d'), dduCenter);
+                if (!file.drawTrace) {
+                    cleanCanvas()
+                }
+                update(file.circles, canvasRef.current.getContext('2d'), dduCenter, file.shape);
                 lastTime = timestamp;
             }
             timerId.current = requestAnimationFrame(loop);
@@ -99,11 +103,16 @@ export default function DduCanvas({ file, pause }) {
 
 
 
-// dddd
+
 
     useEffect(() => {
         if (isPlaying && file.circles.length !== 0) {
-            console.log(file.bestCenter);
+            if (file.backgroundColor !== null) {
+                canvasRef.current.style.backgroundColor = file.backgroundColor
+            } else {
+                canvasRef.current.style.backgroundColor = 'auto'
+
+            }
             if (file.bestCenter !== null) {
                 setDduCenter([
                     (canvasRef.current.width - canvasWindowRef.current.offsetWidth - file.bestCenter.x) / 2,
