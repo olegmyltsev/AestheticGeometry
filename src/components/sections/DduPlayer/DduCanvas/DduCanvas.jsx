@@ -99,7 +99,7 @@ export default function DduCanvas({ file, pause }) {
 
 
 
-
+// dddd
 
     useEffect(() => {
         if (isPlaying && file.circles.length !== 0) {
