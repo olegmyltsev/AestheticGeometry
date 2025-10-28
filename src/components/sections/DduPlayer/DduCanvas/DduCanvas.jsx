@@ -64,11 +64,10 @@ export default function DduCanvas({ file, pause }) {
     }
 
     function start() {
-
         cancelAnimationFrame(timerId.current);
         let lastTime = 0;
         const interval = 50
-        const loop = (timestamp) => {
+        const loop = (timestamp) => {                        
             if (!isPlaying) return;
             if (timestamp - lastTime >= interval) {
                 if (!file.drawTrace) {
@@ -107,23 +106,25 @@ export default function DduCanvas({ file, pause }) {
 
     useEffect(() => {
         if (isPlaying && file.circles.length !== 0) {
-            if (file.backgroundColor !== null) {
-                canvasRef.current.style.backgroundColor = file.backgroundColor
-            } else {
-                canvasRef.current.style.backgroundColor = 'auto'
+            start()
+        } else cancelAnimationFrame(timerId.current);
+    }, [isPlaying])
 
-            }
+    useEffect(
+        () => {
+            if (file.length == 0) return
+            file.backgroundColor !== null ?
+                canvasRef.current.style.backgroundColor = file.backgroundColor
+                : canvasRef.current.style.backgroundColor = 'auto'
+
             if (file.bestCenter !== null) {
                 setDduCenter([
                     (canvasRef.current.width - canvasWindowRef.current.offsetWidth - file.bestCenter.x) / 2,
                     (canvasRef.current.height - canvasWindowRef.current.offsetHeight - file.bestCenter.y) / 2
                 ])
             }
-            start()
-
-        } else cancelAnimationFrame(timerId.current);
-    }, [isPlaying])
-
+        }, [file]
+    )
     useEffect(() => {
         centering()
         enableDragScroll(canvasWindowRef.current, canvasRef.current)
