@@ -67,7 +67,7 @@ export default function DduCanvas({ file, pause }) {
         cancelAnimationFrame(timerId.current);
         let lastTime = 0;
         const interval = 50
-        const loop = (timestamp) => {                        
+        const loop = (timestamp) => {
             if (!isPlaying) return;
             if (timestamp - lastTime >= interval) {
                 if (!file.drawTrace) {
@@ -108,7 +108,7 @@ export default function DduCanvas({ file, pause }) {
         if (isPlaying && file.circles.length !== 0) {
             start()
         } else cancelAnimationFrame(timerId.current);
-    }, [isPlaying])
+    }, [isPlaying, dduCenter])
 
     useEffect(
         () => {
@@ -119,8 +119,8 @@ export default function DduCanvas({ file, pause }) {
 
             if (file.bestCenter !== null) {
                 setDduCenter([
-                    (canvasRef.current.width - canvasWindowRef.current.offsetWidth - file.bestCenter.x) / 2,
-                    (canvasRef.current.height - canvasWindowRef.current.offsetHeight - file.bestCenter.y) / 2
+                    (canvasRef.current.width) / 2 - file.bestCenter.x,
+                    (canvasRef.current.height) / 2 - file.bestCenter.y
                 ])
             }
         }, [file]
@@ -135,6 +135,9 @@ export default function DduCanvas({ file, pause }) {
         ])
     }, [])
 
+    useEffect(()=>{
+        isCentering ? canvasRef.current.style.cursor = 'crosshair': canvasRef.current.style.cursor = ''
+    }, [isCentering])
 
 
     return (
@@ -153,17 +156,13 @@ export default function DduCanvas({ file, pause }) {
                     ref={canvasRef}
                     onClick={(e) => {
                         if (!isCentering) return
-                        pause()
-
                         let scale = window.getComputedStyle(canvasRef.current).getPropertyValue('transform').split(',')[3]
                         const rect = e.target.getBoundingClientRect();
                         const x = (rect.left / scale - e.clientX / scale) * -1
                         const y = (rect.top / scale - e.clientY / scale) * -1
-                        const transformX = dduCenter[0] + canvasRef.current.width / 2 - x
-                        const transformY = dduCenter[1] + canvasRef.current.height / 2 - y
-
-                        setDduCenter([transformX, transformY])
-
+                        const transformX = dduCenter[0]-(-canvasRef.current.width / 2 + x)
+                        const transformY = dduCenter[1]-(-canvasRef.current.height / 2 + y)
+                        setDduCenter([ transformX, transformY])
                         setCentering(false)
                     }}
                     id="dduCanvas"
