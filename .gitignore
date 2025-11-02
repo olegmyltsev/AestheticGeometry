@@ -24,3 +24,5 @@ yarn-error.log*
 
 Asters.ddu
 dev.js
+
+src\components\sections\DduPlayer\DduCanvas\functions\dduParser.js

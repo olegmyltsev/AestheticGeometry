@@ -38,6 +38,9 @@ export default function DduCanvas({ file, pause }) {
     const [isMouseMove, setMouseMove] = useState(false)
     const [dduCenter, setDduCenter] = useState([400, 640])
     const [isCentering, setCentering] = useState(false)
+    const [shape, setShape] = useState('CIRCLE')
+    const [drawTrace, setDrawTrace] = useState(true)
+
 
     function cleanCanvas() {
         canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -70,10 +73,10 @@ export default function DduCanvas({ file, pause }) {
         const loop = (timestamp) => {
             if (!isPlaying) return;
             if (timestamp - lastTime >= interval) {
-                if (!file.drawTrace) {
+                if (!drawTrace) {
                     cleanCanvas()
                 }
-                update(file.circles, canvasRef.current.getContext('2d'), dduCenter, file.shape);
+                update(file.circles, canvasRef.current.getContext('2d'), dduCenter, shape);
                 lastTime = timestamp;
             }
             timerId.current = requestAnimationFrame(loop);
@@ -108,7 +111,7 @@ export default function DduCanvas({ file, pause }) {
         if (isPlaying && file.circles.length !== 0) {
             start()
         } else cancelAnimationFrame(timerId.current);
-    }, [isPlaying, dduCenter])
+    }, [isPlaying, dduCenter, drawTrace, shape])
 
     useEffect(
         () => {
@@ -123,6 +126,8 @@ export default function DduCanvas({ file, pause }) {
                     (canvasRef.current.height) / 2 - file.bestCenter.y
                 ])
             }
+            setShape(file.shape)
+            setDrawTrace(file.drawTrace)
         }, [file]
     )
     useEffect(() => {
@@ -149,7 +154,7 @@ export default function DduCanvas({ file, pause }) {
 
 
             >
-                <Toolbar isActive={isMouseMove} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} setCentering={setCentering} isCentering={isCentering} />
+                <Toolbar isActive={isMouseMove} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} setCentering={setCentering} isCentering={isCentering} setShape={setShape} drawTrace={drawTrace} setDrawTrace={setDrawTrace}/>
                 <canvas
                     // onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
                     className="DduCanvas__canvas"
