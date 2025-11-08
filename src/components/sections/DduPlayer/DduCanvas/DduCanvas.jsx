@@ -110,7 +110,7 @@ export default function DduCanvas({ file, pause }) {
         if (isPlaying && file.circles.length !== 0) {
             start()
         } else cancelAnimationFrame(timerId.current);
-    }, [isPlaying, dduCenter, drawTrace, shape])
+    }, [isPlaying, dduCenter, drawTrace, shape, file])
 
     useEffect(
         () => {

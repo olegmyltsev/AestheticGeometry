@@ -1,7 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
 import { parseDdu } from "./DduCanvas/functions/dodeca-parser.js";
+import getFilePaths from "../../../hooks/useDduGet.jsx";
 
 
 // Глобальный IsPlaying
@@ -11,6 +12,27 @@ function DduPlayer(props) {
     const [file, setFile] = useState('') // Состояние файла
     const [isPlaying, setIsPlaying] = useState(false) // Проигрывается ли?
     const [fileName, setFileName] = useState('Файл не выбран') // Имя файла для отображения на сайте
+    const caruselInterval = useRef(null)
+
+    function carusel(paths) {
+        function fethDDU() {            
+            fetch(paths[i])
+                .then(response => {
+                    if (!response.ok) throw new Error('Файл не найден');
+                    return response.text();
+                })
+                .then(text => setFile(parseDdu(text)))
+                .catch(error => console.error('Ошибка:', error));
+            i=Math.floor(Math.random()*paths.length)
+        }
+        let i = 0
+        fethDDU()
+        if (file === '') {
+            caruselInterval.current = setInterval(() => {
+                fethDDU()
+            }, 30000)
+        }
+    }
 
     async function readFile(file) {
         // Проверка типа файла
@@ -19,8 +41,6 @@ function DduPlayer(props) {
             return false;
         }
         setFileName(file.name) // Изменение имени
-
-
         try {
             // Асинхронное чтение файла
             const content = await new Promise((resolve, reject) => {
@@ -54,6 +74,15 @@ function DduPlayer(props) {
     }, [file])
 
 
+    // useEffect(() => {
+    //     if (typeof (paths) !== 'object') return
+    //     carusel()
+    // }, [paths])
+
+    useEffect(() => {
+        getFilePaths().then((data) => carusel(data))
+    }, [])
+
     return (
         <section className="DduPlayer">
             <div className="DduPlayer__container">
@@ -84,5 +113,6 @@ function DduPlayer(props) {
     )
 
 }
+
 
 export default DduPlayer
