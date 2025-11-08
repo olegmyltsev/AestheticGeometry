@@ -31,12 +31,13 @@ export default function DduCanvas({ file, pause }) {
     const canvasRef = useRef(null);
     const canvasWindowRef = useRef(null)
     const timerId = useRef(null);
-    const mouseHoverTimer = useRef(null)
+    const showToolsTimer = useRef(null)
 
     const isPlaying = useContext(IsPlayingContext)
 
-    const [isMouseMove, setMouseMove] = useState(false)
-    const [dduCenter, setDduCenter] = useState([400, 640])
+    const [showTools, setShowTools] = useState(true)
+
+    const [dduCenter, setDduCenter] = useState([720, 400])
     const [isCentering, setCentering] = useState(false)
     const [shape, setShape] = useState('CIRCLE')
     const [drawTrace, setDrawTrace] = useState(true)
@@ -47,22 +48,20 @@ export default function DduCanvas({ file, pause }) {
     }
 
     function mouseMoveHandle() {
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement == null) {
-                setMouseMove(false)
-                return
-            }
-        })
-        clearTimeout(mouseHoverTimer.current)
-        if (!isMouseMove) {
-            canvasWindowRef.current.style.cursor = ""
-            setMouseMove(true)
+
+        clearTimeout(showToolsTimer.current)
+        // Проверка, если в маленьком экране, то инструменты показываются всегда.
+        if (document.fullscreenElement == null) {
+            setShowTools(true)
+            return
         }
-        mouseHoverTimer.current = setTimeout(() => {
-            if (document.fullscreenElement !== null) {
-                canvasWindowRef.current.style.cursor = "none"
-            }
-            setMouseMove(false)
+
+        canvasWindowRef.current.style.cursor = ""
+        setShowTools(true)
+
+        showToolsTimer.current = setTimeout(() => {
+            canvasWindowRef.current.style.cursor = "none"
+            setShowTools(false)
         }, 1500)
     }
 
@@ -140,8 +139,8 @@ export default function DduCanvas({ file, pause }) {
         ])
     }, [])
 
-    useEffect(()=>{
-        isCentering ? canvasRef.current.style.cursor = 'crosshair': canvasRef.current.style.cursor = ''
+    useEffect(() => {
+        isCentering ? canvasRef.current.style.cursor = 'crosshair' : canvasRef.current.style.cursor = ''
     }, [isCentering])
 
 
@@ -154,7 +153,7 @@ export default function DduCanvas({ file, pause }) {
 
 
             >
-                <Toolbar isActive={isMouseMove} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} setCentering={setCentering} isCentering={isCentering} setShape={setShape} drawTrace={drawTrace} setDrawTrace={setDrawTrace}/>
+                <Toolbar isActive={showTools} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} isCentering={isCentering} setCentering={setCentering} setShape={setShape} shape={shape} drawTrace={drawTrace} setDrawTrace={setDrawTrace} />
                 <canvas
                     // onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
                     className="DduCanvas__canvas"
@@ -165,9 +164,9 @@ export default function DduCanvas({ file, pause }) {
                         const rect = e.target.getBoundingClientRect();
                         const x = (rect.left / scale - e.clientX / scale) * -1
                         const y = (rect.top / scale - e.clientY / scale) * -1
-                        const transformX = dduCenter[0]-(-canvasRef.current.width / 2 + x)
-                        const transformY = dduCenter[1]-(-canvasRef.current.height / 2 + y)
-                        setDduCenter([ transformX, transformY])
+                        const transformX = dduCenter[0] - (-canvasRef.current.width / 2 + x)
+                        const transformY = dduCenter[1] - (-canvasRef.current.height / 2 + y)
+                        setDduCenter([transformX, transformY])
                         setCentering(false)
                     }}
                     id="dduCanvas"
