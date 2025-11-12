@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { update } from "./functions/dodeca-view";
+import { update } from "../../../../utils/dodeca-view";
 import "./DduCanvas.sass"
-import enableDragScroll from "./functions/dragScroll";
+import enableDragScroll from "../../../../hooks/dduPlayer/useDragScroll";
 import Toolbar from "./Toolbar/Toolbar";
 import { IsPlayingContext } from "../DduPlayer";
 

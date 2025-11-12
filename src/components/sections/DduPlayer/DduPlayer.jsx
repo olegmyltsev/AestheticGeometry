@@ -1,8 +1,9 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
-import { parseDdu } from "./DduCanvas/functions/dodeca-parser.js";
-import getFilePaths from "../../../hooks/useDduGet.jsx";
+import { parseDdu } from "../../../utils/dodeca-parser.js";
+import getFilePaths from "../../../hooks/dduPlayer/useDduGet.js";
+import readFile from "../../../utils/readFileForm.js";
 
 
 // Глобальный IsPlaying
@@ -12,76 +13,62 @@ function DduPlayer(props) {
     const [file, setFile] = useState('') // Состояние файла
     const [isPlaying, setIsPlaying] = useState(false) // Проигрывается ли?
     const [fileName, setFileName] = useState('Файл не выбран') // Имя файла для отображения на сайте
-    const caruselInterval = useRef(null)
+    const caruselTimeout = useRef(null)
 
     function carusel(paths) {
-        function fethDDU() {            
-            fetch(paths[i])
+        function fethDDU() {
+            clearTimeout(caruselTimeout.current)
+            fetch(paths[index])
                 .then(response => {
                     if (!response.ok) throw new Error('Файл не найден');
                     return response.text();
                 })
-                .then(text => setFile(parseDdu(text)))
+                .then(text => setFile(parseDdu(text))).then(() => {
+                    setIsPlaying(true)
+                    caruselTimeout.current = setTimeout(() => {
+                        fethDDU()
+                    }, 3000)
+
+                })
                 .catch(error => console.error('Ошибка:', error));
-            i=Math.floor(Math.random()*paths.length)
+            index = Math.floor(Math.random() * paths.length)
         }
-        let i = 0
+        let index = 5
         fethDDU()
-        if (file === '') {
-            caruselInterval.current = setInterval(() => {
-                fethDDU()
-            }, 30000)
-        }
     }
 
-    async function readFile(file) {
-        // Проверка типа файла
-        if (file.name.split('.').pop().toLowerCase() !== 'ddu') {
-            alert('Неизвестный тип файла.');
-            return false;
-        }
-        setFileName(file.name) // Изменение имени
-        try {
-            // Асинхронное чтение файла
-            const content = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (event) => resolve(event.target.result);
-                reader.onerror = (error) => reject(error);
-                reader.readAsText(file);
-            });
 
-            return content; // Возвращает контент из файла
-        } catch (error) {
-            console.error('Ошибка чтения файла:', error);
-            alert(`Ошибка чтения файла`)
-            throw error; // Или ошибку
-        }
-    }
-
-    //  Функция пуск/пауза
     function togglePlaying() {
-        if (!file) { // Проверка на пустой файл
-            setIsPlaying(false)
-
-        } else setIsPlaying(!isPlaying)
+        !file ? setIsPlaying(false) :
+            setIsPlaying(!isPlaying)
     }
 
-    //  Запускает проигрывание сразу при выборе файла
-    useEffect(() => {
-        if (!file) return
-        setIsPlaying(true);
+    function fileFormChangeHandle(value) {
+        if (!value) return
+        clearTimeout(caruselTimeout.current)
+        setFileName(value.name)
+        readFile(value)
+            .then((result) => {
+                if (!result) return false
+                setFile(parseDdu(result))
+                return true
+            })
+            .then(result => setIsPlaying(result))
+    }
 
-    }, [file])
-
-
-    // useEffect(() => {
-    //     if (typeof (paths) !== 'object') return
-    //     carusel()
-    // }, [paths])
 
     useEffect(() => {
         getFilePaths().then((data) => carusel(data))
     }, [])
+
+    useEffect(() => {
+        if (isPlaying && fileName === 'Файл не выбран') {
+            getFilePaths().then((data) => carusel(data))
+        } else {
+            clearTimeout(caruselTimeout.current)
+
+        }
+    }, [isPlaying])
 
     return (
         <section className="DduPlayer">
@@ -92,14 +79,7 @@ function DduPlayer(props) {
                         id="dduFileInput"
                         className="DduPlayer__file-input"
                         type="file"
-                        onChange={async (event) => {
-                            // Начинается чтение сразу при выборе файла
-                            if (!event.target.files[0]) return
-
-                            const fileContent = await readFile(event.target.files[0]);
-                            if (!fileContent) return // Если файл пустой, выход  
-                            setFile(parseDdu(fileContent)) // Или обновляется состояние                         
-                        }}
+                        onChange={event => fileFormChangeHandle(event.target.files[0])}
                     />
                     <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
                     <span className="DduPlayer__file-name">{fileName}</span>
