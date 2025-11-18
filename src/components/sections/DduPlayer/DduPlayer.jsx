@@ -2,7 +2,7 @@ import { createContext, useEffect, useRef, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
 import { parseDdu } from "../../../utils/dodeca-parser.js";
-import getFilePaths from "../../../hooks/dduPlayer/useDduGet.js";
+import {getFilePaths,  getDDU } from "../../../hooks/dduPlayer/getDDU.js";
 import readFile from "../../../utils/readFileForm.js";
 
 
@@ -18,19 +18,14 @@ function DduPlayer(props) {
     function carusel(paths) {
         function fethDDU() {
             clearTimeout(caruselTimeout.current)
-            fetch(paths[index])
-                .then(response => {
-                    if (!response.ok) throw new Error('Файл не найден');
-                    return response.text();
-                })
-                .then(text => setFile(parseDdu(text))).then(() => {
+            getDDU(paths[index])
+                .then(text => setFile(parseDdu(text)))
+                .then(() => {
                     setIsPlaying(true)
                     caruselTimeout.current = setTimeout(() => {
                         fethDDU()
-                    }, 3000)
-
+                    }, 30000)
                 })
-                .catch(error => console.error('Ошибка:', error));
             index = Math.floor(Math.random() * paths.length)
         }
         let index = 5

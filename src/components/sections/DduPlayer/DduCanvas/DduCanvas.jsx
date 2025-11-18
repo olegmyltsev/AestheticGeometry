@@ -115,6 +115,7 @@ export default function DduCanvas({ file, pause }) {
     useEffect(
         () => {
             if (file.length == 0) return
+            cleanCanvas()
             file.backgroundColor !== null ?
                 canvasRef.current.style.backgroundColor = file.backgroundColor
                 : canvasRef.current.style.backgroundColor = 'auto'
@@ -170,8 +171,8 @@ export default function DduCanvas({ file, pause }) {
                         setCentering(false)
                     }}
                     id="dduCanvas"
-                    width='6000px'
-                    height='3000px'
+                    width='4000px'
+                    height='2000px'
                 ></canvas>
             </div>
         </div>
