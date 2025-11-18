@@ -28,7 +28,7 @@ function DduPlayer(props) {
                 })
             index = Math.floor(Math.random() * paths.length)
         }
-        let index = 5
+        let index = Math.floor(Math.random() * paths.length)
         fethDDU()
     }
 
@@ -61,7 +61,6 @@ function DduPlayer(props) {
             getFilePaths().then((data) => carusel(data))
         } else {
             clearTimeout(caruselTimeout.current)
-
         }
     }, [isPlaying])
 

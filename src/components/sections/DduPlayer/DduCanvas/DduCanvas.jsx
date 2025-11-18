@@ -4,27 +4,8 @@ import "./DduCanvas.sass"
 import enableDragScroll from "../../../../hooks/dduPlayer/useDragScroll";
 import Toolbar from "./Toolbar/Toolbar";
 import { IsPlayingContext } from "../DduPlayer";
+import zoom from "../../../../hooks/dduPlayer/useZoom";
 
-function zoom(element, chaild) {
-    let scale = 1
-    element.addEventListener('wheel', (e) => {
-        e.preventDefault()
-        if (scale < 0.5) {
-            scale = 0.5
-            return
-        } else if (scale > 3) {
-            scale = 3
-            return
-        }
-        if (e.deltaY > 0) {
-            scale -= 0.05
-        } else if (e.deltaY < 0) {
-            scale += 0.05
-
-        }
-        chaild.style.transform = 'scale(' + scale + ')'
-    })
-}
 
 
 export default function DduCanvas({ file, pause }) {
@@ -36,7 +17,6 @@ export default function DduCanvas({ file, pause }) {
     const isPlaying = useContext(IsPlayingContext)
 
     const [showTools, setShowTools] = useState(true)
-
     const [dduCenter, setDduCenter] = useState([720, 400])
     const [isCentering, setCentering] = useState(false)
     const [shape, setShape] = useState('CIRCLE')
@@ -48,9 +28,7 @@ export default function DduCanvas({ file, pause }) {
     }
 
     function mouseMoveHandle() {
-
         clearTimeout(showToolsTimer.current)
-        // Проверка, если в маленьком экране, то инструменты показываются всегда.
         if (document.fullscreenElement == null) {
             setShowTools(true)
             return
@@ -103,6 +81,18 @@ export default function DduCanvas({ file, pause }) {
     }
 
 
+    function chooseCenter(e) {
+        if (!isCentering) return
+        let scale = window.getComputedStyle(canvasRef.current).getPropertyValue('transform').split(',')[3]
+        const rect = e.target.getBoundingClientRect();
+        const x = (rect.left / scale - e.clientX / scale) * -1
+        const y = (rect.top / scale - e.clientY / scale) * -1
+        const transformX = dduCenter[0] - (-canvasRef.current.width / 2 + x)
+        const transformY = dduCenter[1] - (-canvasRef.current.height / 2 + y)
+        setDduCenter([transformX, transformY])
+        setCentering(false)
+    }
+
 
 
 
@@ -154,22 +144,24 @@ export default function DduCanvas({ file, pause }) {
 
 
             >
-                <Toolbar isActive={showTools} fullScreen={() => fullScreenToggle(canvasWindowRef.current)} centering={centering} pause={pause} cleanCanvas={cleanCanvas} isCentering={isCentering} setCentering={setCentering} setShape={setShape} shape={shape} drawTrace={drawTrace} setDrawTrace={setDrawTrace} />
+                <Toolbar
+                    isActive={showTools}
+                    fullScreen={() => fullScreenToggle(canvasWindowRef.current)}
+                    centering={centering}
+                    pause={pause}
+                    cleanCanvas={cleanCanvas}
+                    isCentering={isCentering}
+                    setCentering={setCentering}
+                    setShape={setShape}
+                    shape={shape}
+                    drawTrace={drawTrace}
+                    setDrawTrace={setDrawTrace}
+                />
                 <canvas
-                    // onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
+                    onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
                     className="DduCanvas__canvas"
                     ref={canvasRef}
-                    onClick={(e) => {
-                        if (!isCentering) return
-                        let scale = window.getComputedStyle(canvasRef.current).getPropertyValue('transform').split(',')[3]
-                        const rect = e.target.getBoundingClientRect();
-                        const x = (rect.left / scale - e.clientX / scale) * -1
-                        const y = (rect.top / scale - e.clientY / scale) * -1
-                        const transformX = dduCenter[0] - (-canvasRef.current.width / 2 + x)
-                        const transformY = dduCenter[1] - (-canvasRef.current.height / 2 + y)
-                        setDduCenter([transformX, transformY])
-                        setCentering(false)
-                    }}
+                    onClick={e => chooseCenter(e)}
                     id="dduCanvas"
                     width='4000px'
                     height='2000px'
