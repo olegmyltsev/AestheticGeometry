@@ -2,8 +2,9 @@ import { createContext, useEffect, useRef, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
 import { parseDdu } from "../../../utils/dodeca-parser.js";
-import {getFilePaths,  getDDU } from "../../../hooks/dduPlayer/getDDU.js";
+import { getFilePaths, getDDU } from "../../../hooks/dduPlayer/getDDU.js";
 import readFile from "../../../utils/readFileForm.js";
+import { useInterval } from "../../../hooks/globalHooks/useInterval.jsx";
 
 
 // Глобальный IsPlaying
@@ -13,24 +14,17 @@ function DduPlayer(props) {
     const [file, setFile] = useState('') // Состояние файла
     const [isPlaying, setIsPlaying] = useState(false) // Проигрывается ли?
     const [fileName, setFileName] = useState('Файл не выбран') // Имя файла для отображения на сайте
-    const caruselTimeout = useRef(null)
+    const [paths, setPaths] = useState([])
+    const [isCaruselOn, setIsCaruselOn] = useState(true)
 
-    function carusel(paths) {
-        function fethDDU() {
-            clearTimeout(caruselTimeout.current)
-            getDDU(paths[index])
-                .then(text => setFile(parseDdu(text)))
-                .then(() => {
-                    setIsPlaying(true)
-                    caruselTimeout.current = setTimeout(() => {
-                        fethDDU()
-                    }, 30000)
-                })
-            index = Math.floor(Math.random() * paths.length)
-        }
+
+    const caruselInterval = useInterval(carusel, 3000)
+    function carusel() {
         let index = Math.floor(Math.random() * paths.length)
-        fethDDU()
+        getDDU(paths[index]).then(text => setFile(parseDdu(text))).then(() => setIsPlaying(true))
     }
+
+
 
 
     function togglePlaying() {
@@ -40,27 +34,33 @@ function DduPlayer(props) {
 
     function fileFormChangeHandle(value) {
         if (!value) return
-        clearTimeout(caruselTimeout.current)
         setFileName(value.name)
         readFile(value)
             .then((result) => {
                 if (!result) return false
                 setFile(parseDdu(result))
+                caruselInterval.reset()
+                setIsCaruselOn(false)
                 return true
             })
-            .then(result => setIsPlaying(result))
+            .then(play => setIsPlaying(play))
     }
 
 
     useEffect(() => {
-        getFilePaths().then((data) => carusel(data))
+        getFilePaths().then((data) => setPaths(data))
     }, [])
 
     useEffect(() => {
-        if (isPlaying && fileName === 'Файл не выбран') {
-            getFilePaths().then((data) => carusel(data))
-        } else {
-            clearTimeout(caruselTimeout.current)
+        if (isCaruselOn) {
+            carusel()
+            caruselInterval.start()
+        }
+    }, [paths])
+
+    useEffect(() => {
+        if (isCaruselOn) {
+            isPlaying ? caruselInterval.resume() : caruselInterval.pause()
         }
     }, [isPlaying])
 
