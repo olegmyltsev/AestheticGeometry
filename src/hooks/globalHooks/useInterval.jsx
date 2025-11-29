@@ -38,7 +38,6 @@ export const useInterval = (callback, delay) => {
 
   const resume = useCallback(() => {
     if (isRunning) return;
-    
     setIsRunning(true);
     intervalId.current = setInterval(() => {
       savedCallback.current();
@@ -46,11 +45,11 @@ export const useInterval = (callback, delay) => {
     }, remainingTime.current);
   }, [isRunning]);
 
-  const reset = useCallback(() => {
+  const reset = () => {
     clearInterval(intervalId.current);
     setIsRunning(false);
     remainingTime.current = delay;
-  }, [delay]);
+  }
 
   // Очистка при размонтировании
   useEffect(() => {

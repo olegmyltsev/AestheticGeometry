@@ -8,7 +8,7 @@ import { useInterval } from "../../../hooks/globalHooks/useInterval.jsx";
 
 
 // Глобальный IsPlaying
-export const IsPlayingContext = createContext(false)
+export const DduPlayerContext = createContext({})
 
 function DduPlayer(props) {
     const [file, setFile] = useState('') // Состояние файла
@@ -16,15 +16,14 @@ function DduPlayer(props) {
     const [fileName, setFileName] = useState('Файл не выбран') // Имя файла для отображения на сайте
     const [paths, setPaths] = useState([])
     const [isCaruselOn, setIsCaruselOn] = useState(true)
+    const [caruselIndex, setCaruselIndex] = useState(0)
 
 
-    const caruselInterval = useInterval(carusel, 3000)
+    const caruselInterval = useInterval(nextDdu, 30000)
     function carusel() {
-        let index = Math.floor(Math.random() * paths.length)
-        getDDU(paths[index]).then(text => setFile(parseDdu(text))).then(() => setIsPlaying(true))
+        getDDU(paths[caruselIndex]).then(text => setFile(parseDdu(text))).then(() => setIsPlaying(true))
+        
     }
-
-
 
 
     function togglePlaying() {
@@ -46,6 +45,19 @@ function DduPlayer(props) {
             .then(play => setIsPlaying(play))
     }
 
+    function nextDdu() {
+        caruselIndex === paths.length - 1 ?
+            setCaruselIndex(0) :
+            setCaruselIndex(caruselIndex + 1)
+    }
+
+    function prevDdu() {
+        caruselIndex === 0 ?
+            setCaruselIndex(paths.length-1) :
+            setCaruselIndex(caruselIndex - 1)
+    }
+
+    useEffect(carusel, [caruselIndex])
 
     useEffect(() => {
         getFilePaths().then((data) => setPaths(data))
@@ -64,6 +76,16 @@ function DduPlayer(props) {
         }
     }, [isPlaying])
 
+    useEffect(() => {
+        if (!isCaruselOn) {
+            caruselInterval.reset()
+        } else if (isCaruselOn) {
+            caruselInterval.reset()
+
+            caruselInterval.start()
+        }
+    }, [isCaruselOn])
+
     return (
         <section className="DduPlayer">
             <div className="DduPlayer__container">
@@ -79,9 +101,9 @@ function DduPlayer(props) {
                     <span className="DduPlayer__file-name">{fileName}</span>
 
                 </div>
-                <IsPlayingContext value={isPlaying} >
+                <DduPlayerContext value={{ isPlaying, isCaruselOn, setIsCaruselOn, nextDdu, prevDdu }} >
                     <DduCanvas file={file} pause={togglePlaying /*Файл и функция паузы прокидываются вниз */} />
-                </IsPlayingContext>
+                </DduPlayerContext>
             </div>
         </section>
     )

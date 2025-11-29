@@ -1,23 +1,25 @@
 .Toolbar
-    transition: 200ms
-    padding-top: 3px
-    position: absolute
-    display: flex
-    justify-content: center
-    align-items: center
-    bottom: 0
-    left: 0
-    right: 0
-    z-index: 1
-    background: #180c0088
-    cursor: default
+
+    &__bottom
+        transition: 500ms
+        padding-top: 3px
+        position: absolute
+        display: flex
+        justify-content: center
+        align-items: center
+        bottom: 0
+        left: 0
+        right: 0
+        z-index: 1
+        background: #180c0088
+        cursor: default
     select
         font-size: 20px
         color: #fff
         border: solid #fff 2px
         border-radius: 5px
         width: auto
-        
+
         option
             background: #ffffff
             color: #000
@@ -35,6 +37,44 @@
             height: 100%
         &-pause
             width: 40px
-        
 
-        
+    &__autoplay-control
+        background: #180c0088
+        padding: 5px
+        border-radius: 12px
+        position: absolute
+        top: 10px
+        left: 10px
+        z-index: 1
+        transition: 500ms
+        *
+            transition: 200ms
+        &__toggle
+            display: block
+            border: none
+            width: 40px
+            background: #180c0088
+            color: #fff
+            border-radius: 10px
+            div
+                height: 20px
+                width: 20px
+                border-radius: 50%
+                background: #472600
+                transform: scale(110%)
+            &-active
+                background: #ffffff7a
+                div
+                    background: #883600
+                    transform: scale(110%) translateX(20px)
+        &__btn
+            background: none
+            border: none
+            display: block
+            margin: 0 auto
+            margin-top: 5px
+            width: 25px
+            svg
+                width: 100%
+                fill: #ffffff
+

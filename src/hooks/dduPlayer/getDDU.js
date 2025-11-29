@@ -11,7 +11,13 @@ export async function getFilePaths() {
       for (let ddu of JSON.parse(text)) {
         paths.push(ddu.download_url)
       }
-      return paths
+      // Перемешивание додек
+      let shuffled = paths
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+
+      return shuffled
     })
     .catch(() => { return '' });
 }
@@ -22,7 +28,7 @@ export async function getDDU(path) {
       if (!response.ok) throw new Error('Файл не найден');
       return response.text();
     })
-    .catch(() => {return ''});
+    .catch(() => { return '' });
 }
 
 

@@ -3,7 +3,7 @@ import { update } from "../../../../utils/dodeca-view";
 import "./DduCanvas.sass"
 import enableDragScroll from "../../../../hooks/dduPlayer/useDragScroll";
 import Toolbar from "./Toolbar/Toolbar";
-import { IsPlayingContext } from "../DduPlayer";
+import { DduPlayerContext } from "../DduPlayer";
 import zoom from "../../../../hooks/dduPlayer/useZoom";
 
 
@@ -14,7 +14,7 @@ export default function DduCanvas({ file, pause }) {
     const timerId = useRef(null);
     const showToolsTimer = useRef(null)
 
-    const isPlaying = useContext(IsPlayingContext)
+    const {isPlaying} = useContext(DduPlayerContext)
 
     const [showTools, setShowTools] = useState(true)
     const [dduCenter, setDduCenter] = useState([720, 400])
