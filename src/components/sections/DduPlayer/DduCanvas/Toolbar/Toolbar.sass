@@ -49,23 +49,26 @@
         transition: 500ms
         *
             transition: 200ms
+
         &__toggle
             display: block
             border: none
             width: 40px
-            background: #180c0088
+            background: #735632
             color: #fff
             border-radius: 10px
+            &:hover
+                background: #564632cb
             div
                 height: 20px
                 width: 20px
                 border-radius: 50%
-                background: #472600
+                background: 	#4B1F10
                 transform: scale(110%)
             &-active
-                background: #ffffff7a
+                background: #B9A07F
                 div
-                    background: #883600
+                    background: #734332
                     transform: scale(110%) translateX(20px)
         &__btn
             background: none
@@ -74,7 +77,10 @@
             margin: 0 auto
             margin-top: 5px
             width: 25px
+            &:hover
+                transform: scale(120%)
+            &:active
+                transform: translateY(5%) scale(120%)
             svg
                 width: 100%
                 fill: #ffffff
-
