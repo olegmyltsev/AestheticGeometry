@@ -1,3 +1,10 @@
+@keyframes autoplayRotation
+    0%
+        transform: rotate(0)
+
+    100%
+        transform: rotate(360deg)
+
 .Toolbar
 
     &__bottom
@@ -13,6 +20,9 @@
         z-index: 1
         background: #180c0088
         cursor: default
+        @media screen and (max-width: 500px )
+            padding-bottom: 10px
+            
     select
         font-size: 20px
         color: #fff
@@ -51,25 +61,18 @@
             transition: 200ms
 
         &__toggle
-            display: block
+            background: none
             border: none
-            width: 40px
-            background: #735632
-            color: #fff
-            border-radius: 10px
+            svg
+                fill: #fff
+                height: 30px
+                transform-origin: 15px 16.5px
+
+                &.animated
+                    animation: autoplayRotation 2000ms infinite
+                    animation-timing-function: linear
             &:hover
-                background: #564632cb
-            div
-                height: 20px
-                width: 20px
-                border-radius: 50%
-                background: 	#4B1F10
                 transform: scale(110%)
-            &-active
-                background: #B9A07F
-                div
-                    background: #734332
-                    transform: scale(110%) translateX(20px)
         &__btn
             background: none
             border: none

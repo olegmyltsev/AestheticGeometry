@@ -4,7 +4,6 @@ import "./DduCanvas.sass"
 import enableDragScroll from "../../../../hooks/dduPlayer/useDragScroll";
 import Toolbar from "./Toolbar/Toolbar";
 import { DduPlayerContext } from "../DduPlayer";
-import zoom from "../../../../hooks/dduPlayer/useZoom";
 
 
 
@@ -14,13 +13,15 @@ export default function DduCanvas({ file, pause }) {
     const timerId = useRef(null);
     const showToolsTimer = useRef(null)
 
-    const {isPlaying} = useContext(DduPlayerContext)
+    const { isPlaying } = useContext(DduPlayerContext)
 
     const [showTools, setShowTools] = useState(true)
     const [dduCenter, setDduCenter] = useState([720, 400])
     const [isCentering, setCentering] = useState(false)
     const [shape, setShape] = useState('CIRCLE')
     const [drawTrace, setDrawTrace] = useState(true)
+    const [scale, setScale] = useState(1)
+
 
 
     function cleanCanvas() {
@@ -123,7 +124,7 @@ export default function DduCanvas({ file, pause }) {
     useEffect(() => {
         centering()
         enableDragScroll(canvasWindowRef.current, canvasRef.current)
-        zoom(canvasWindowRef.current, canvasRef.current)
+
         setDduCenter([
             (canvasRef.current.width - canvasWindowRef.current.offsetWidth - dduCenter[0]) / 2,
             (canvasRef.current.height - canvasWindowRef.current.offsetHeight - dduCenter[1]) / 2
@@ -134,6 +135,9 @@ export default function DduCanvas({ file, pause }) {
         isCentering ? canvasRef.current.style.cursor = 'crosshair' : canvasRef.current.style.cursor = ''
     }, [isCentering])
 
+    useEffect(() => {
+        canvasRef.current.style.transform = 'scale(' + scale + ')'
+    }, [scale])
 
     return (
         <div className="DduCanvas">
@@ -156,6 +160,13 @@ export default function DduCanvas({ file, pause }) {
                     shape={shape}
                     drawTrace={drawTrace}
                     setDrawTrace={setDrawTrace}
+                    zoom={(scaleStep) => {
+                        if (scale < 0.55 && scaleStep < 0) {
+                            return
+                        } else if (scale > 2.95 && scaleStep > 0) {
+                            return
+                        } else setScale(scale + scaleStep)
+                    }}
                 />
                 <canvas
                     onDoubleClick={() => fullScreenToggle(canvasWindowRef.current)}
