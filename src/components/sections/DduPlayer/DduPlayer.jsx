@@ -1,16 +1,17 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
-import { parseDdu } from "../../../utils/dodeca-parser.js";
 import { getFilePaths, getDDU } from "../../../hooks/dduPlayer/getDDU.js";
-import readFile from "../../../utils/readFileForm.js";
 import { useInterval } from "../../../hooks/globalHooks/useInterval.jsx";
+import { observer } from "mobx-react-lite";
+import ChooseFileForm from "./DduCanvas/ChooseFileForm/ChooseFileForm.jsx";
 
 
 // Глобальный IsPlaying
 export const DduPlayerContext = createContext({})
 
-function DduPlayer(props) {
+const DduPlayer= observer((props) => {
+    // const {count, inc} = counter
     const [file, setFile] = useState('') // Состояние файла
     const [isPlaying, setIsPlaying] = useState(false) // Проигрывается ли?
     const [fileName, setFileName] = useState('Файл не выбран') // Имя файла для отображения на сайте
@@ -20,10 +21,11 @@ function DduPlayer(props) {
 
 
     const caruselInterval = useInterval(nextDdu, 30000)
-    function carusel() {
-        getDDU(paths[caruselIndex]).then(text => setFile(parseDdu(text))).then(() => setIsPlaying(true))
+
+    // function carusel() {
+    //     getDDU(paths[caruselIndex]).then(text => setFile(parseDdu(text))).then(() => setIsPlaying(true))
         
-    }
+    // }
 
 
     function togglePlaying() {
@@ -31,19 +33,7 @@ function DduPlayer(props) {
             setIsPlaying(!isPlaying)
     }
 
-    function fileFormChangeHandle(value) {
-        if (!value) return
-        setFileName(value.name)
-        readFile(value)
-            .then((result) => {
-                if (!result) return false
-                setFile(parseDdu(result))
-                caruselInterval.reset()
-                setIsCaruselOn(false)
-                return true
-            })
-            .then(play => setIsPlaying(play))
-    }
+    
 
     function nextDdu() {
         caruselIndex === paths.length - 1 ?
@@ -57,7 +47,7 @@ function DduPlayer(props) {
             setCaruselIndex(caruselIndex - 1)
     }
 
-    useEffect(carusel, [caruselIndex])
+    // useEffect(carusel, [caruselIndex])
 
     useEffect(() => {
         getFilePaths().then((data) => setPaths(data))
@@ -65,7 +55,7 @@ function DduPlayer(props) {
 
     useEffect(() => {
         if (isCaruselOn) {
-            carusel()
+            // carusel()
             caruselInterval.start()
         }
     }, [paths])
@@ -89,18 +79,7 @@ function DduPlayer(props) {
     return (
         <section className="DduPlayer">
             <div className="DduPlayer__container">
-                <div className="DduPlayer__form">
-                    <input // Кнопка выбора файла
-                        onClick={() => setIsPlaying(false)}
-                        id="dduFileInput"
-                        className="DduPlayer__file-input"
-                        type="file"
-                        onChange={event => fileFormChangeHandle(event.target.files[0])}
-                    />
-                    <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
-                    <span className="DduPlayer__file-name">{fileName}</span>
-
-                </div>
+                <ChooseFileForm />
                 <DduPlayerContext value={{ isPlaying, isCaruselOn, setIsCaruselOn, nextDdu, prevDdu }} >
                     <DduCanvas file={file} pause={togglePlaying /*Файл и функция паузы прокидываются вниз */} />
                 </DduPlayerContext>
@@ -108,7 +87,7 @@ function DduPlayer(props) {
         </section>
     )
 
-}
+})
 
 
 export default DduPlayer

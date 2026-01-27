@@ -60,7 +60,7 @@ const MODE_EXPECTING_BORDER_COLOR = 6;
 //   shape: shape-string,
 //   circles: Array<circle-json-object>
 // }
-export function parseDdu(file) {
+export default function parseDdu(file) {
     let backgroundColor = "#ffffff"; // white
     let drawTrace = true; // whether to retain old circles drawn on the canvas
     let bestCenter = null; // {x,y} of the center

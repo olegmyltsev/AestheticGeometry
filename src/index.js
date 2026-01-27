@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './sass/index.sass';
 import App from './App.jsx';
 
+
+
+
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <App />
-  </React.StrictMode>
 );
