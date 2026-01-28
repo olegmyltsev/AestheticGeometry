@@ -1,25 +1,35 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { update } from "../../../../utils/dodeca-view";
+import { useEffect, useRef, useState } from "react";
+import { observer } from "mobx-react-lite";
 import "./DduCanvas.sass"
+
+import { update } from "../../../../utils/dodeca-view";
 import enableDragScroll from "../../../../hooks/dduPlayer/useDragScroll";
 import Toolbar from "./Toolbar/Toolbar";
-import { DduPlayerContext } from "../DduPlayer";
+
+import targetDDU from "../../../../store/dduPlayerStore/targetDDU";
+import userActionsStore from "../../../../store/dduPlayerStore/userActionsStore";
 
 
 
-export default function DduCanvas({ file, pause }) {
+const DduCanvas = observer(() => {
+    const file = targetDDU.content
+    const {
+        isPlaying,
+        shape,
+        setShape,
+        drawTrace,
+        setDrawTrace
+    } = userActionsStore
+
     const canvasRef = useRef(null);
     const canvasWindowRef = useRef(null)
     const timerId = useRef(null);
     const showToolsTimer = useRef(null)
 
-    const { isPlaying } = useContext(DduPlayerContext)
 
     const [showTools, setShowTools] = useState(true)
     const [dduCenter, setDduCenter] = useState([720, 400])
     const [isCentering, setCentering] = useState(false)
-    const [shape, setShape] = useState('CIRCLE')
-    const [drawTrace, setDrawTrace] = useState(true)
     const [scale, setScale] = useState(1)
 
 
@@ -152,14 +162,9 @@ export default function DduCanvas({ file, pause }) {
                     isActive={showTools}
                     fullScreen={() => fullScreenToggle(canvasWindowRef.current)}
                     centering={centering}
-                    pause={pause}
                     cleanCanvas={cleanCanvas}
                     isCentering={isCentering}
                     setCentering={setCentering}
-                    setShape={setShape}
-                    shape={shape}
-                    drawTrace={drawTrace}
-                    setDrawTrace={setDrawTrace}
                     zoom={(scaleStep) => {
                         if (scale < 0.55 && scaleStep < 0) {
                             return
@@ -181,4 +186,6 @@ export default function DduCanvas({ file, pause }) {
         </div>
 
     );
-}
+})
+
+export default DduCanvas

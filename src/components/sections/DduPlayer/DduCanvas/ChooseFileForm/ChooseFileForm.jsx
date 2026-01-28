@@ -1,19 +1,11 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import dduFileStore from '../../../../../store/dduPlayerStore/dduFileStore'
-import { reaction } from 'mobx'
+import targetDDU from '../../../../../store/dduPlayerStore/targetDDU'
 
 
 const ChooseFileForm = observer(() => {
-    const {name, updateFile} = dduFileStore
+    const {name, updateFile} = targetDDU
 
-    function fileFormChangeHandle(value) {
-        if (!value) return
-        updateFile(value)
-    }
-
-    reaction(()=>name, (name)=>{console.log(name);
-    })
     // useEffect(()=>{console.log(getFile())}, [file.name])
 
     return (
@@ -23,7 +15,11 @@ const ChooseFileForm = observer(() => {
                 id="dduFileInput"
                 className="DduPlayer__file-input"
                 type="file"
-                onChange={event => fileFormChangeHandle(event.target.files[0])}
+                onChange={event => {
+                    const e = event.target.files[0]
+                    if (!e) return
+                    updateFile(e)
+                }}
             />
             <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
             <span className="DduPlayer__file-name">{name}</span>

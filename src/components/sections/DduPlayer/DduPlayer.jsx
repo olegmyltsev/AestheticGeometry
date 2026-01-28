@@ -1,20 +1,18 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
-import { getFilePaths, getDDU } from "../../../hooks/dduPlayer/getDDU.js";
+import { getFilePaths } from "../../../hooks/dduPlayer/getDDU.js";
 import { useInterval } from "../../../hooks/globalHooks/useInterval.jsx";
 import { observer } from "mobx-react-lite";
 import ChooseFileForm from "./DduCanvas/ChooseFileForm/ChooseFileForm.jsx";
+import userActionsStore from "../../../store/dduPlayerStore/userActionsStore.js";
 
 
-// Глобальный IsPlaying
+
 export const DduPlayerContext = createContext({})
 
 const DduPlayer= observer((props) => {
-    // const {count, inc} = counter
-    const [file, setFile] = useState('') // Состояние файла
-    const [isPlaying, setIsPlaying] = useState(false) // Проигрывается ли?
-    const [fileName, setFileName] = useState('Файл не выбран') // Имя файла для отображения на сайте
+    const {isPlaying} = userActionsStore
     const [paths, setPaths] = useState([])
     const [isCaruselOn, setIsCaruselOn] = useState(true)
     const [caruselIndex, setCaruselIndex] = useState(0)
@@ -28,11 +26,7 @@ const DduPlayer= observer((props) => {
     // }
 
 
-    function togglePlaying() {
-        !file ? setIsPlaying(false) :
-            setIsPlaying(!isPlaying)
-    }
-
+  
     
 
     function nextDdu() {
@@ -81,7 +75,7 @@ const DduPlayer= observer((props) => {
             <div className="DduPlayer__container">
                 <ChooseFileForm />
                 <DduPlayerContext value={{ isPlaying, isCaruselOn, setIsCaruselOn, nextDdu, prevDdu }} >
-                    <DduCanvas file={file} pause={togglePlaying /*Файл и функция паузы прокидываются вниз */} />
+                    <DduCanvas />
                 </DduPlayerContext>
             </div>
         </section>

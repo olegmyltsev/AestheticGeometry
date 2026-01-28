@@ -1,9 +1,21 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import './Toolbar.sass'
 import { DduPlayerContext } from '../../DduPlayer'
+import userActionsStore from '../../../../../store/dduPlayerStore/userActionsStore'
+import { observer } from 'mobx-react-lite'
 
-export default function Toolbar({ isActive, fullScreen, centering, pause, cleanCanvas, setCentering, isCentering, setShape, shape, drawTrace, setDrawTrace, zoom}) {
-    const { isPlaying, isCaruselOn, setIsCaruselOn, nextDdu, prevDdu } = useContext(DduPlayerContext)
+const Toolbar = observer(({ isActive, fullScreen, centering, cleanCanvas, setCentering, isCentering, zoom }) => {
+
+    const { 
+        togglePlaying,
+        isPlaying,
+        shape,
+        setShape,
+        drawTrace,
+        setDrawTrace 
+    } = userActionsStore
+
+    const { isCaruselOn, setIsCaruselOn, nextDdu, prevDdu } = useContext(DduPlayerContext)
     const Toolbar = useRef(null)
     const autoplayControl = useRef(null)
     const select = useRef(null)
@@ -67,11 +79,11 @@ export default function Toolbar({ isActive, fullScreen, centering, pause, cleanC
                         <path d="M5.911 6.284l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L4.793 6 1.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638zm5 0l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L9.793 6 6.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638z" />
                     </svg>
                 </button>
-                <button onClick={()=> zoom(0.5)} className='Toolbar__autoplay-control__btn'>
+                <button onClick={() => zoom(0.5)} className='Toolbar__autoplay-control__btn'>
                     <svg viewBox="0 -960 960 960" stroke='#fff'><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" /></svg>
                 </button>
-                <button onClick={()=> zoom(-0.5)}  className='Toolbar__autoplay-control__btn'>
-                    <svg viewBox="0 -960 960 960"><path d="M200-440v-80h560v80H200Z"/></svg>
+                <button onClick={() => zoom(-0.5)} className='Toolbar__autoplay-control__btn'>
+                    <svg viewBox="0 -960 960 960"><path d="M200-440v-80h560v80H200Z" /></svg>
                 </button>
 
 
@@ -106,7 +118,7 @@ export default function Toolbar({ isActive, fullScreen, centering, pause, cleanC
                         <path d="M9.00002 3.99998H4.00004L4 9M20 8.99999V4L15 3.99997M15 20H20L20 15M4 15L4 20L9.00002 20" stroke="#ffffffff" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                 </button>
-                <button title='Приостановить' className="Toolbar__btn Toolbar__btn-pause" onClick={pause}>
+                <button title='Приостановить' className="Toolbar__btn Toolbar__btn-pause" onClick={() => togglePlaying()}>
                     <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
                         {isPlaying ? <g> <rect x="8" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" />
                             <rect x="13" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" /> </g> :
@@ -139,4 +151,6 @@ export default function Toolbar({ isActive, fullScreen, centering, pause, cleanC
             </div>
         </div>
     )
-}
+})
+
+export default Toolbar
