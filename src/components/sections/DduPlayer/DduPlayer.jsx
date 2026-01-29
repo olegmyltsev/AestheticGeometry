@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import "./DduPlayer.sass"
 import DduCanvas from "./DduCanvas/DduCanvas";
-import { getFilePaths } from "../../../hooks/dduPlayer/getDDU.js";
+import { getFilePaths } from "../../../utils/getDDU.js";
 import { useInterval } from "../../../hooks/globalHooks/useInterval.jsx";
 import { observer } from "mobx-react-lite";
 import ChooseFileForm from "./DduCanvas/ChooseFileForm/ChooseFileForm.jsx";
@@ -43,9 +43,9 @@ const DduPlayer= observer((props) => {
 
     // useEffect(carusel, [caruselIndex])
 
-    useEffect(() => {
-        getFilePaths().then((data) => setPaths(data))
-    }, [])
+    // useEffect(() => {
+    //     getFilePaths().then((data) => console.log(data))
+    // }, [])
 
     useEffect(() => {
         if (isCaruselOn) {

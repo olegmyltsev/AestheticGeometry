@@ -1,5 +1,5 @@
 
-async function readFile(file) {        
+async function readFileForm(file) {        
         // if(!(file instanceof File)  ) return false
         if (file.name.split('.').pop().toLowerCase() !== 'ddu') {
             alert('Неизвестный тип файла.');
@@ -20,4 +20,4 @@ async function readFile(file) {
         }
     }
 
-export default readFile
+export default readFileForm

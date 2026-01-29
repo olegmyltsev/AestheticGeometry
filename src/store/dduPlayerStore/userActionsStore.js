@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import targetDDU from "./targetDDU";
+import targetDDU from "./currentDDU";
 
 const SHAPES = ["CIRCLE", "SQUARE", "CROSS", "VERTICAL_BAR", "HORIZONTAL_BAR"]
 

@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import './Toolbar.sass'
+import './UserTools.sass'
 import { DduPlayerContext } from '../../DduPlayer'
 import userActionsStore from '../../../../../store/dduPlayerStore/userActionsStore'
 import { observer } from 'mobx-react-lite'
 
-const Toolbar = observer(({ isActive, fullScreen, centering, cleanCanvas, setCentering, isCentering, zoom }) => {
+const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setCentering, isCentering, zoom }) => {
 
     const { 
         togglePlaying,
@@ -18,7 +18,6 @@ const Toolbar = observer(({ isActive, fullScreen, centering, cleanCanvas, setCen
     const { isCaruselOn, setIsCaruselOn, nextDdu, prevDdu } = useContext(DduPlayerContext)
     const Toolbar = useRef(null)
     const autoplayControl = useRef(null)
-    const select = useRef(null)
     const [isHover, setIsHover] = useState(false)
 
     useEffect(() => {
@@ -96,7 +95,7 @@ const Toolbar = observer(({ isActive, fullScreen, centering, cleanCanvas, setCen
                 onMouseLeave={() => setIsHover(false)}>
 
 
-                <select ref={select} className="Toolbar__btn" title='Выбрать форму' onChange={(e) => {
+                <select className="Toolbar__btn" title='Выбрать форму' onChange={(e) => {
                     setShape(e.target.value)
                 }} value={shape}>
                     <option value="CIRCLE">○</option>
@@ -153,4 +152,4 @@ const Toolbar = observer(({ isActive, fullScreen, centering, cleanCanvas, setCen
     )
 })
 
-export default Toolbar
+export default UserTools

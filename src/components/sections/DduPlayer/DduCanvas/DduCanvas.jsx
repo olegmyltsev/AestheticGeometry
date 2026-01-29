@@ -4,9 +4,9 @@ import "./DduCanvas.sass"
 
 import { update } from "../../../../utils/dodeca-view";
 import enableDragScroll from "../../../../hooks/dduPlayer/useDragScroll";
-import Toolbar from "./Toolbar/Toolbar";
+import UserTools from "./UserTools/UserTools";
 
-import targetDDU from "../../../../store/dduPlayerStore/targetDDU";
+import targetDDU from "../../../../store/dduPlayerStore/currentDDU";
 import userActionsStore from "../../../../store/dduPlayerStore/userActionsStore";
 
 
@@ -155,10 +155,8 @@ const DduCanvas = observer(() => {
                 className='DduCanvas__window'
                 ref={canvasWindowRef}
                 onMouseMove={mouseMoveHandle}
-
-
             >
-                <Toolbar
+                <UserTools
                     isActive={showTools}
                     fullScreen={() => fullScreenToggle(canvasWindowRef.current)}
                     centering={centering}
