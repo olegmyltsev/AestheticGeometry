@@ -10,7 +10,7 @@ class CloudDduStore {
     }
 
     async updateDduList(
-        url = 'https://api.github.com/repos/olegmyltsev/AestheticGeometry/contents/src/Ddu?ref=dev'
+        url = 'https://api.github.com/repos/olegmyltsev/AestheticGeometry/contents/src/DduStorage?ref=dev'
     ) {
         let DDUs = []
         return fetch(url)

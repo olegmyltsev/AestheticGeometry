@@ -4,15 +4,20 @@ import './DduGalleryCard.sass'
 
 
 
-const DduGalleryCard = (props) => {
+const DduGalleryCard = ({name, path}) => {
     const {getDdu, updateFile} = currentDDU
 
     function cardClickHandle(){
-        getDdu(props.path).then((data)=>updateFile(props.name, data))
+        getDdu(path).then((data)=>updateFile(name, data))
+        console.log(typeof(path));
+        
     }
 
     return (
-        <div className='DduGalleryCard' onClick={cardClickHandle}>{props.name}</div>
+        <div className='DduGalleryCard' onClick={cardClickHandle}>
+            <div className="cardHeader">{name}</div>
+            <div className="cardImg" style={{backgroundImage: 'url ('+path+')'}}></div>
+        </div>
     )
 }
 
