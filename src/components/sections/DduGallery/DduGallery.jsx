@@ -9,7 +9,7 @@ const DduGallery = observer(() => {
 
     return (
         <div className='DduGallery'>
-            <h1>Или выберите додеку из нашей галереи.</h1>
+            <h1>Галерея додек</h1>
             <div className="container">
                 
                 {dduList.map((value, index) =>

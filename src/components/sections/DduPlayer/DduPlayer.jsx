@@ -73,10 +73,10 @@ const DduPlayer= observer((props) => {
     return (
         <section className="DduPlayer">
             <div className="DduPlayer__container">
-                <ChooseFileForm />
                 <DduPlayerContext value={{ isPlaying, isCaruselOn, setIsCaruselOn, nextDdu, prevDdu }} >
                     <DduCanvas />
                 </DduPlayerContext>
+                <ChooseFileForm />
             </div>
         </section>
     )

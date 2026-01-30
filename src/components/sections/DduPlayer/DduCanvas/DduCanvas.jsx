@@ -14,6 +14,7 @@ import userActionsStore from "../../../../store/dduPlayerStore/userActionsStore"
 const DduCanvas = observer(() => {
     const file = targetDDU.content
     const {
+        togglePlaying,
         isPlaying,
         shape,
         setShape,
@@ -32,7 +33,10 @@ const DduCanvas = observer(() => {
     const [isCentering, setCentering] = useState(false)
     const [scale, setScale] = useState(1)
 
-
+    useEffect(() => {
+        togglePlaying(true)
+        window.scrollTo(0, 0)
+    }, [file])
 
     function cleanCanvas() {
         canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);

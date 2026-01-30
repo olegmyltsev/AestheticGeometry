@@ -26,7 +26,7 @@ const ChooseFileForm = observer(() => {
                 type="file"
                 onChange={event => fileFormChangeHandle(event.target.files[0])}
             />
-            <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл</label>
+            <label className="DduPlayer__file-input-label" htmlFor="dduFileInput">выбрать файл с устройства</label>
             <span className="DduPlayer__file-name">{name}</span>
 
         </div>

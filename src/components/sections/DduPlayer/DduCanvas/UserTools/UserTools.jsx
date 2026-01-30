@@ -6,13 +6,13 @@ import { observer } from 'mobx-react-lite'
 
 const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setCentering, isCentering, zoom }) => {
 
-    const { 
+    const {
         togglePlaying,
         isPlaying,
         shape,
         setShape,
         drawTrace,
-        setDrawTrace 
+        setDrawTrace
     } = userActionsStore
 
     const { isCaruselOn, setIsCaruselOn, nextDdu, prevDdu } = useContext(DduPlayerContext)
@@ -58,6 +58,9 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
                 onMouseLeave={() => setIsHover(false)}
             >
                 <button
+                    style={{
+                        display: 'none'
+                    }}
                     title='Включить автоперемотку'
                     className={isCaruselOn ?
                         'Toolbar__autoplay-control__toggle Toolbar__autoplay-control__toggle-active' : 'Toolbar__autoplay-control__toggle'}
@@ -68,12 +71,16 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
                     <svg className={isCaruselOn ? "animated" : ""} viewBox="0 -960 960 960" ><path d="M522-80v-82q34-5 66.5-18t61.5-34l56 58q-42 32-88 51.5T522-80Zm-80 0Q304-98 213-199.5T122-438q0-75 28.5-140.5t77-114q48.5-48.5 114-77T482-798h6l-62-62 56-58 160 160-160 160-56-56 64-64h-8q-117 0-198.5 81.5T202-438q0 104 68 182.5T442-162v82Zm322-134-58-56q21-29 34-61.5t18-66.5h82q-5 50-24.5 96T764-214Zm76-264h-82q-5-34-18-66.5T706-606l58-56q32 39 51 86t25 98Z" /></svg>
                 </button>
 
-                <button className='Toolbar__autoplay-control__btn' onClick={prevDdu} title='Следующая додека' >
+                <button className='Toolbar__autoplay-control__btn' onClick={prevDdu} title='Следующая додека' style={{
+                        display: 'none'
+                    }} >
                     <svg viewBox="0 0 12 12" transform='rotate(180 0 0 )'>
                         <path d="M5.911 6.284l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L4.793 6 1.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638zm5 0l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L9.793 6 6.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638z" />
                     </svg>
                 </button>
-                <button className='Toolbar__autoplay-control__btn' onClick={nextDdu} title='Предыдущая додека' >
+                <button className='Toolbar__autoplay-control__btn' onClick={nextDdu} title='Предыдущая додека' style={{
+                        display: 'none'
+                    }} >
                     <svg viewBox="0 0 12 12">
                         <path d="M5.911 6.284l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L4.793 6 1.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638zm5 0l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L9.793 6 6.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638z" />
                     </svg>
