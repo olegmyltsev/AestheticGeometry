@@ -11,6 +11,7 @@ const DduGalleryCard = ({ name, path = '' }) => {
         getDdu(path).then((data) => updateFile(name, data))
 
     }
+    
     console.log('https://raw.githubusercontent.com/olegmyltsev/AestheticGeometry/dev/src/Ddu/dduImg/' + encodeURI(name) + '.png');
     
 
@@ -18,7 +19,7 @@ const DduGalleryCard = ({ name, path = '' }) => {
         <div className='DduGalleryCard' onClick={cardClickHandle}>
 
             <div className="cardImg" style={{
-                backgroundImage: 'url(https://raw.githubusercontent.com/olegmyltsev/AestheticGeometry/dev/src/DduStorage/dduImg/' + encodeURI(name) + '.png)'
+                backgroundImage: 'url(https://raw.githubusercontent.com/olegmyltsev/AestheticGeometry/dev/src/Ddu/dduImg/' + encodeURI(name) + '.png)'
             }}>
             </div>
             <div className="cardHeader">{name}</div>
