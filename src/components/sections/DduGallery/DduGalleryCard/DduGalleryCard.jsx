@@ -11,7 +11,7 @@ const DduGalleryCard = ({ name, path = '' }) => {
         getDdu(path).then((data) => updateFile(name, data))
 
     }
-    console.log('https://raw.githubusercontent.com/olegmyltsev/AestheticGeometry/dev/src/DduStorage/dduImg/' + encodeURI(name) + '.png');
+    console.log('https://raw.githubusercontent.com/olegmyltsev/AestheticGeometry/dev/src/Ddu/dduImg/' + encodeURI(name) + '.png');
     
 
     return (

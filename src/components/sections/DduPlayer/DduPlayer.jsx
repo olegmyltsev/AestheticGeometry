@@ -47,28 +47,28 @@ const DduPlayer= observer((props) => {
     //     getFilePaths().then((data) => console.log(data))
     // }, [])
 
-    useEffect(() => {
-        if (isCaruselOn) {
-            // carusel()
-            caruselInterval.start()
-        }
-    }, [paths])
+    // useEffect(() => {
+    //     if (isCaruselOn) {
+    //         // carusel()
+    //         caruselInterval.start()
+    //     }
+    // }, [paths])
 
-    useEffect(() => {
-        if (isCaruselOn) {
-            isPlaying ? caruselInterval.resume() : caruselInterval.pause()
-        }
-    }, [isPlaying])
+    // useEffect(() => {
+    //     if (isCaruselOn) {
+    //         isPlaying ? caruselInterval.resume() : caruselInterval.pause()
+    //     }
+    // }, [isPlaying])
 
-    useEffect(() => {
-        if (!isCaruselOn) {
-            caruselInterval.reset()
-        } else if (isCaruselOn) {
-            caruselInterval.reset()
+    // useEffect(() => {
+    //     if (!isCaruselOn) {
+    //         caruselInterval.reset()
+    //     } else if (isCaruselOn) {
+    //         caruselInterval.reset()
 
-            caruselInterval.start()
-        }
-    }, [isCaruselOn])
+    //         caruselInterval.start()
+    //     }
+    // }, [isCaruselOn])
 
     return (
         <section className="DduPlayer">

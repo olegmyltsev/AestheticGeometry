@@ -34,7 +34,10 @@ const DduCanvas = observer(() => {
     const [scale, setScale] = useState(1)
 
     useEffect(() => {
-        togglePlaying(true)
+        setTimeout(() => {
+            togglePlaying(true)
+
+        }, 50);
         window.scrollTo(0, 0)
     }, [file])
 
