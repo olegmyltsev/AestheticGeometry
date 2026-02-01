@@ -36,9 +36,10 @@ const DduCanvas = observer(() => {
     useEffect(() => {
         setTimeout(() => {
             togglePlaying(true)
-
+            centering()
         }, 50);
         window.scrollTo(0, 0)
+        
     }, [file])
 
     function cleanCanvas() {
