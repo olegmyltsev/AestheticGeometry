@@ -1,8 +1,8 @@
 import { makeAutoObservable } from "mobx"
 
 
-class CloudDduStore {
-    dduList = [{name: '', path: ''}]
+class cloudDduStore {
+    dduList = [{name: '', path: ''}, {name: '', path: ''}]
 
     constructor() {
         makeAutoObservable(this)
@@ -36,4 +36,4 @@ class CloudDduStore {
   
 }
 
-export default new CloudDduStore()
+export default new cloudDduStore()

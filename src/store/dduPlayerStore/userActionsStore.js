@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
-import targetDDU from "./currentDDU";
+import currentDduStore from "./currentDduStore";
+import autoplayStore from "./autoplayStore";
 
 const SHAPES = ["CIRCLE", "SQUARE", "CROSS", "VERTICAL_BAR", "HORIZONTAL_BAR"]
 
@@ -8,13 +9,12 @@ class userActionsStore {
     shape = 'CIRCLE'
     drawTrace = true
 
-    constructor() {
-        makeAutoObservable(this)
-    }
+    constructor() {makeAutoObservable(this)}
 
     togglePlaying = (option = !this.isPlaying) => {
-        if (!targetDDU.content) return
+        if (!currentDduStore.content) return
         this.isPlaying = option
+        
     }
 
     setShape = (option) => {

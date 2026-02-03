@@ -6,13 +6,13 @@ import { update } from "../../../../utils/dodeca-view";
 import enableDragScroll from "../../../../hooks/dduPlayer/useDragScroll";
 import UserTools from "./UserTools/UserTools";
 
-import targetDDU from "../../../../store/dduPlayerStore/currentDDU";
+import currentDduStore from "../../../../store/dduPlayerStore/currentDduStore";
 import userActionsStore from "../../../../store/dduPlayerStore/userActionsStore";
 
 
 
 const DduCanvas = observer(() => {
-    const file = targetDDU.content
+    const file = currentDduStore.content
     const {
         togglePlaying,
         isPlaying,
@@ -21,6 +21,8 @@ const DduCanvas = observer(() => {
         drawTrace,
         setDrawTrace
     } = userActionsStore
+
+    
 
     const canvasRef = useRef(null);
     const canvasWindowRef = useRef(null)
@@ -34,12 +36,13 @@ const DduCanvas = observer(() => {
     const [scale, setScale] = useState(1)
 
     useEffect(() => {
+        
         setTimeout(() => {
             togglePlaying(true)
             centering()
         }, 50);
         window.scrollTo(0, 0)
-        
+
     }, [file])
 
     function cleanCanvas() {
@@ -121,25 +124,25 @@ const DduCanvas = observer(() => {
         } else cancelAnimationFrame(timerId.current);
     }, [isPlaying, dduCenter, drawTrace, shape, file])
 
-    useEffect(
-        () => {
-            if (file.length == 0) return
-            cleanCanvas()
-            file.backgroundColor !== null ?
-                canvasRef.current.style.backgroundColor = file.backgroundColor
-                : canvasRef.current.style.backgroundColor = 'auto'
+    useEffect(() => {
+        if (file.length == 0) return
+        cleanCanvas()
+        file.backgroundColor !== null ?
+            canvasRef.current.style.backgroundColor = file.backgroundColor
+            : canvasRef.current.style.backgroundColor = 'auto'
 
-            if (file.bestCenter !== null) {
-                setDduCenter([
-                    (canvasRef.current.width) / 2 - file.bestCenter.x,
-                    (canvasRef.current.height) / 2 - file.bestCenter.y
-                ])
-            }
-            setShape(file.shape)
-            setDrawTrace(file.drawTrace)
-        }, [file]
+        if (file.bestCenter !== null) {
+            setDduCenter([
+                (canvasRef.current.width) / 2 - file.bestCenter.x,
+                (canvasRef.current.height) / 2 - file.bestCenter.y
+            ])
+        }
+        setShape(file.shape)
+        setDrawTrace(file.drawTrace)
+    }, [file]
     )
     useEffect(() => {
+
         centering()
         enableDragScroll(canvasWindowRef.current, canvasRef.current)
 

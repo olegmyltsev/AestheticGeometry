@@ -10,10 +10,9 @@ const DduGallery = observer(() => {
     return (
         <div className='DduGallery'>
             <h1>Галерея додек</h1>
-            <div className="container">
-                
+            <div className="DduGallery__container">
                 {dduList.map((value, index) =>
-                    <DduGalleryCard name={value.name} path = {value.path} key={index} />
+                    <DduGalleryCard dduName={value.name} dduPath = {value.path} key={index} />
                 )}
             </div>
         </div>

@@ -1,19 +1,17 @@
 import { observer } from 'mobx-react-lite'
-import targetDDU from '../../../../../store/dduPlayerStore/currentDDU'
+import currentDduStore from '../../../../../store/dduPlayerStore/currentDduStore'
 
 import readFileForm from '../../../../../utils/readFileForm'
 
 
 const ChooseFileForm = observer(() => {
-    const { name, updateFile } = targetDDU
+    const { name, updateDdu } = currentDduStore
 
     function fileFormChangeHandle(value) {
         if (!value) return
         readFileForm(value).then((result) => {
             if (!result) return
-            console.log(result);
-            
-            updateFile(value.name, result)
+            updateDdu(value.name, result)
         })
     }
 

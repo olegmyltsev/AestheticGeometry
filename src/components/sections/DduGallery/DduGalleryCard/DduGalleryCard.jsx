@@ -1,26 +1,21 @@
-
-import currentDDU from '../../../../store/dduPlayerStore/currentDDU'
+import currentDduStore from '../../../../store/dduPlayerStore/currentDduStore'
 import './DduGalleryCard.sass'
 
+const DduGalleryCard = ({ dduName, dduPath = '' }) => {
+    const getDduFromDB = currentDduStore.getDduFromDB
 
+    const imgPath = `url(https://raw.githubusercontent.com/olegmyltsev/AestheticGeometry/main/src/Ddu/dduImg/${encodeURI(dduName)}.png)`
 
-const DduGalleryCard = ({ name, path = '' }) => {
-    const { getDdu, updateFile } = currentDDU
-
-    function cardClickHandle() {
-        getDdu(path).then((data) => updateFile(name, data))
-
-    }
-
+    function cardClickHandle() {getDduFromDB(dduPath, dduName)}
 
     return (
         <div className='DduGalleryCard' onClick={cardClickHandle}>
-
-            <div className="cardImg" style={{
-                backgroundImage: 'url(https://raw.githubusercontent.com/olegmyltsev/AestheticGeometry/main/src/Ddu/dduImg/' + encodeURI(name) + '.png)'
-            }}>
+            <div
+                className="DduGalleryCard__img"
+                style={{ backgroundImage: imgPath }}
+            >
             </div>
-            <div className="cardHeader">{name}</div>
+            <div className="DduGalleryCard__header">{dduName}</div>
         </div>
     )
 }
