@@ -22,7 +22,7 @@ const DduCanvas = observer(() => {
         setDrawTrace
     } = userActionsStore
 
-    
+
 
     const canvasRef = useRef(null);
     const canvasWindowRef = useRef(null)
@@ -35,15 +35,7 @@ const DduCanvas = observer(() => {
     const [isCentering, setCentering] = useState(false)
     const [scale, setScale] = useState(1)
 
-    useEffect(() => {
-        
-        setTimeout(() => {
-            togglePlaying(true)
-            centering()
-        }, 50);
-        window.scrollTo(0, 0)
 
-    }, [file])
 
     function cleanCanvas() {
         canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -124,13 +116,15 @@ const DduCanvas = observer(() => {
         } else cancelAnimationFrame(timerId.current);
     }, [isPlaying, dduCenter, drawTrace, shape, file])
 
+
     useEffect(() => {
         if (file.length == 0) return
+        setTimeout(() => {
+            togglePlaying(true)
+            centering()
+        }, 50);
+        window.scrollTo(0, 0)
         cleanCanvas()
-        file.backgroundColor !== null ?
-            canvasRef.current.style.backgroundColor = file.backgroundColor
-            : canvasRef.current.style.backgroundColor = 'auto'
-
         if (file.bestCenter !== null) {
             setDduCenter([
                 (canvasRef.current.width) / 2 - file.bestCenter.x,
@@ -141,24 +135,17 @@ const DduCanvas = observer(() => {
         setDrawTrace(file.drawTrace)
     }, [file]
     )
-    useEffect(() => {
 
+    useEffect(() => {
         centering()
         enableDragScroll(canvasWindowRef.current, canvasRef.current)
-
         setDduCenter([
             (canvasRef.current.width - canvasWindowRef.current.offsetWidth - dduCenter[0]) / 2,
             (canvasRef.current.height - canvasWindowRef.current.offsetHeight - dduCenter[1]) / 2
         ])
     }, [])
 
-    useEffect(() => {
-        isCentering ? canvasRef.current.style.cursor = 'crosshair' : canvasRef.current.style.cursor = ''
-    }, [isCentering])
 
-    useEffect(() => {
-        canvasRef.current.style.transform = 'scale(' + scale + ')'
-    }, [scale])
 
     return (
         <div className="DduCanvas">
@@ -187,9 +174,13 @@ const DduCanvas = observer(() => {
                     className="DduCanvas__canvas"
                     ref={canvasRef}
                     onClick={e => chooseCenter(e)}
-                    id="dduCanvas"
                     width='4000px'
                     height='2000px'
+                    style={{
+                        cursor: isCentering ? 'crosshair' : '',
+                        transform: 'scale(' + scale + ')',
+                        backgroundColor: file.backgroundColor !== null ? file.backgroundColor :'auto'
+                    }}
                 ></canvas>
             </div>
         </div>

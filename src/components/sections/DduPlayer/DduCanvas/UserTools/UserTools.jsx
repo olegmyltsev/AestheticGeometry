@@ -36,21 +36,18 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
             Toolbar.current.style.transform = ''
             autoplayControl.current.style.transform = ''
         }
-
     }, [isActive, isHover])
+    
 
     useEffect(() => {
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement !== null) {
                 Toolbar.current.style = 'position: fixed;'
                 autoplayControl.current.style = 'position: fixed;'
-
             } else {
                 Toolbar.current.style = ''
                 autoplayControl.current.style = ''
-
             }
-
         })
     }, [])
 
