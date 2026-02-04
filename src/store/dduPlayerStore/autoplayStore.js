@@ -6,10 +6,11 @@ class autoplayStore{
 
     constructor(){makeAutoObservable(this)}
 
-    setAutoplayState=(option)=>{
-        
+    toggleIsAutoplay = (option)=>{
         this.isAutoplayOn = option
     }
+
+    
 }
 
 export default new autoplayStore()

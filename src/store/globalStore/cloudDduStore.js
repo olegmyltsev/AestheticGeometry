@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx"
+import autoplayStore from "../dduPlayerStore/autoplayStore"
 
 
 class cloudDduStore {
@@ -30,6 +31,7 @@ class cloudDduStore {
                 this.dduList = tempDduList
                 return tempDduList
             })
+            .then(() => autoplayStore.toggleIsAutoplay(true))
             .catch(() => { return '' });
     }
 

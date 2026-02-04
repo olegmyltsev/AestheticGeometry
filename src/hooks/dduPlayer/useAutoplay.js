@@ -1,55 +1,49 @@
-import { useRef } from "react"
-import userActionsStore from "../../store/dduPlayerStore/userActionsStore"
+import { useEffect, useRef } from "react"
 import cloudDduStore from "../../store/globalStore/cloudDduStore"
 import currentDduStore from "../../store/dduPlayerStore/currentDduStore"
 import autoplayStore from "../../store/dduPlayerStore/autoplayStore"
 
-const delay = 5000
+const delay = 10000
 
 export function useAutoplay() {
-    const setAutoplayState = autoplayStore.setAutoplayState
+    const { isAutoplayOn } = autoplayStore
 
-    const isPlaying = userActionsStore.isPlaying
-    const ddulist = cloudDduStore.dduList
+    const dduList = cloudDduStore.dduList
     const getDduFromDB = currentDduStore.getDduFromDB
-
     const intervalId = useRef(null)
-    const startTime = useRef();
-    const remainingTime = useRef(delay)
 
 
-    function randomElement(list) {
-        return list[Math.floor(Math.random() * list.length)]
-    }
+    // function randomElement(list) {
+    //     return list[Math.floor(Math.random() * list.length)]
+    // }
 
     function autoplayRandomUpdate() {
-        let randomDdu = randomElement(ddulist)
+        let randomDdu = dduList[Math.floor(Math.random() * dduList.length)]
         getDduFromDB(randomDdu.path, randomDdu.name)
-        startTime.current = Date.now()
     }
 
-    function autoplayLoop(time) {
+    function autoplayLoop() {
         intervalId.current = setTimeout(() => {
             autoplayRandomUpdate()
-            autoplayLoop(delay)
-        }, time)
+            autoplayLoop()
+        }, delay)
     }
 
     function startAutoplay() {
-        setAutoplayState(true)
-        // autoplayRandomUpdate()
-        autoplayLoop(remainingTime.current)
+        autoplayRandomUpdate()
+        autoplayLoop()
     }
 
     function stopAutoplay() {
-        setAutoplayState(false)
-        console.log('aeaaa');
-
         clearInterval(intervalId.current)
-        remainingTime.current = Date.now() - startTime.current
     }
 
-    return { startAutoplay, stopAutoplay }
+
+    useEffect(() => {
+        isAutoplayOn ? startAutoplay() : stopAutoplay()
+    }, [isAutoplayOn])
+
+    // return { startAutoplay, stopAutoplay }
     // function carusel() {
     //     getDDU(paths[caruselIndex]).then(text => setFile(parseDdu(text))).then(() => setIsPlaying(true))
 

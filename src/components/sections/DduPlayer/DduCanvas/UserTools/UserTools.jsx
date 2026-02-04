@@ -4,6 +4,7 @@ import userActionsStore from '../../../../../store/dduPlayerStore/userActionsSto
 import { observer } from 'mobx-react-lite'
 import { useAutoplay } from '../../../../../hooks/dduPlayer/useAutoplay'
 import autoplayStore from '../../../../../store/dduPlayerStore/autoplayStore'
+import currentDduStore from '../../../../../store/dduPlayerStore/currentDduStore'
 
 const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setCentering, isCentering, zoom }) => {
     const {
@@ -15,20 +16,17 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
         setDrawTrace
     } = userActionsStore
 
-    const isAutoplayOn = autoplayStore.isAutoplayOn
+    const { isAutoplayOn, toggleIsAutoplay } = autoplayStore
+
+    const { getPrevDdu, getNextDdu } = currentDduStore
 
     const Toolbar = useRef(null)
     const autoplayControl = useRef(null)
     const [isHover, setIsHover] = useState(false)
 
-    const { startAutoplay, stopAutoplay } = useAutoplay()
+    useAutoplay()
 
-    useEffect(() => {
-        if(isAutoplayOn){
-            startAutoplay()
-            
-        }
-    }, [])
+
 
     useEffect(() => {
         if (!isActive && !isHover) {
@@ -71,26 +69,31 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
                     className={isAutoplayOn ?
                         'Toolbar__autoplay-control__toggle Toolbar__autoplay-control__toggle-active' : 'Toolbar__autoplay-control__toggle'}
                     onClick={() => {
-                        isAutoplayOn ? stopAutoplay() : startAutoplay()
+                        isAutoplayOn ? toggleIsAutoplay(false) : toggleIsAutoplay(true)
                     }}
                 >
                     <svg className={isAutoplayOn ? "animated" : ""} viewBox="0 -960 960 960" ><path d="M522-80v-82q34-5 66.5-18t61.5-34l56 58q-42 32-88 51.5T522-80Zm-80 0Q304-98 213-199.5T122-438q0-75 28.5-140.5t77-114q48.5-48.5 114-77T482-798h6l-62-62 56-58 160 160-160 160-56-56 64-64h-8q-117 0-198.5 81.5T202-438q0 104 68 182.5T442-162v82Zm322-134-58-56q21-29 34-61.5t18-66.5h82q-5 50-24.5 96T764-214Zm76-264h-82q-5-34-18-66.5T706-606l58-56q32 39 51 86t25 98Z" /></svg>
                 </button>
 
-                {/*// <button className='Toolbar__autoplay-control__btn' onClick={prevDdu} title='Следующая додека' style={{
-                //         display: 'none'
-                //     }} >
-                //     <svg viewBox="0 0 12 12" transform='rotate(180 0 0 )'>
-                //         <path d="M5.911 6.284l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L4.793 6 1.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638zm5 0l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L9.793 6 6.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638z" />
-                //     </svg>
-                // </button>
-                // <button className='Toolbar__autoplay-control__btn' onClick={nextDdu} title='Предыдущая додека' style={{
-                //         display: 'none'
-                //     }} >
-                //     <svg viewBox="0 0 12 12">
-                //         <path d="M5.911 6.284l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L4.793 6 1.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638zm5 0l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L9.793 6 6.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638z" />
-                //     </svg>
-                // </button> */}
+                <button
+                    className='Toolbar__autoplay-control__btn'
+                    onClick={getPrevDdu}
+                    title='Предыдущая додека'
+                >
+                    <svg viewBox="0 0 12 12" transform='rotate(180 0 0 )'>
+                        <path d="M5.911 6.284l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L4.793 6 1.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638zm5 0l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L9.793 6 6.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638z" />
+                    </svg>
+                </button>
+                <button
+                    className='Toolbar__autoplay-control__btn'
+                    onClick={getNextDdu}
+                    title='Следующая додека '
+
+                >
+                    <svg viewBox="0 0 12 12">
+                        <path d="M5.911 6.284l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L4.793 6 1.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638zm5 0l-.057.07-4 4a.5.5 0 01-.765-.638l.057-.07L9.793 6 6.146 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638z" />
+                    </svg>
+                </button>
                 <button onClick={() => zoom(0.5)} className='Toolbar__autoplay-control__btn'>
                     <svg viewBox="0 -960 960 960" stroke='#fff'><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" /></svg>
                 </button>
@@ -130,8 +133,20 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
                         <path d="M9.00002 3.99998H4.00004L4 9M20 8.99999V4L15 3.99997M15 20H20L20 15M4 15L4 20L9.00002 20" stroke="#ffffffff" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                 </button>
-                <button title='Приостановить' className="Toolbar__btn Toolbar__btn-pause" onClick={() => togglePlaying()}>
-                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
+                <button
+                    title='Приостановить'
+                    className="Toolbar__btn Toolbar__btn-pause"
+                    onClick={() => {
+                        togglePlaying()
+                        toggleIsAutoplay(false)
+                    }}
+                >
+                    <svg
+                        width="30px"
+                        height="30px"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
                         {isPlaying ? <g> <rect x="8" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" />
                             <rect x="13" y="6" width="3" height="12" rx="0.5" stroke="#71ff69ff" /> </g> :
                             <path d="M8 5V19L19 12L8 5Z" stroke="#71ff69ff" strokeWidth="1.5" fill="none" strokeLinejoin="round" />}
