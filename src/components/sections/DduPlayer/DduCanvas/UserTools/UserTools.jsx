@@ -144,7 +144,6 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
                     className="Toolbar__btn Toolbar__btn-pause"
                     onClick={() => {
                         togglePlaying()
-                        toggleIsAutoplay(false)
                     }}
                 >
                     <svg
