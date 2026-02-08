@@ -3,7 +3,7 @@ import cloudDduStore from "../../store/globalStore/cloudDduStore"
 import currentDduStore from "../../store/dduPlayerStore/currentDduStore"
 import autoplayStore from "../../store/dduPlayerStore/autoplayStore"
 
-const delay = 10000
+const delay = 30000
 
 export function useAutoplay() {
     const { isAutoplayOn } = autoplayStore

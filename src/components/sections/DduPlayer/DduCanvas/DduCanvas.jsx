@@ -8,6 +8,7 @@ import UserTools from "./UserTools/UserTools";
 
 import currentDduStore from "../../../../store/dduPlayerStore/currentDduStore";
 import userActionsStore from "../../../../store/dduPlayerStore/userActionsStore";
+import autoplayStore from "../../../../store/dduPlayerStore/autoplayStore";
 
 
 
@@ -110,6 +111,7 @@ const DduCanvas = observer(() => {
 
 
 
+
     useEffect(() => {
         if (isPlaying && file.circles.length !== 0) {
             start()
@@ -123,8 +125,11 @@ const DduCanvas = observer(() => {
             togglePlaying(true)
             centering()
         }, 50);
-        window.scrollTo(0, 0)
+        if (!autoplayStore.isAutoplayOn) { window.scrollTo(0, 0) }
+
         cleanCanvas()
+
+
         if (file.bestCenter !== null) {
             setDduCenter([
                 (canvasRef.current.width) / 2 - file.bestCenter.x,
@@ -161,6 +166,9 @@ const DduCanvas = observer(() => {
                     cleanCanvas={cleanCanvas}
                     isCentering={isCentering}
                     setCentering={setCentering}
+                    nextFrame={() => {
+                        update(file.circles, canvasRef.current.getContext('2d'), dduCenter, shape)
+                    }}
                     zoom={(scaleStep) => {
                         if (scale < 0.55 && scaleStep < 0) {
                             return
@@ -179,7 +187,7 @@ const DduCanvas = observer(() => {
                     style={{
                         cursor: isCentering ? 'crosshair' : '',
                         transform: 'scale(' + scale + ')',
-                        backgroundColor: file.backgroundColor !== null ? file.backgroundColor :'auto'
+                        backgroundColor: file.backgroundColor !== null ? file.backgroundColor : 'auto'
                     }}
                 ></canvas>
             </div>

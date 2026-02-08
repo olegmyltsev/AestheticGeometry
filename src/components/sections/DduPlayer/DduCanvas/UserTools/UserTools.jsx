@@ -6,7 +6,7 @@ import { useAutoplay } from '../../../../../hooks/dduPlayer/useAutoplay'
 import autoplayStore from '../../../../../store/dduPlayerStore/autoplayStore'
 import currentDduStore from '../../../../../store/dduPlayerStore/currentDduStore'
 
-const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setCentering, isCentering, zoom }) => {
+const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setCentering, isCentering, zoom, nextFrame }) => {
     const {
         togglePlaying,
         isPlaying,
@@ -37,7 +37,7 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
             autoplayControl.current.style.transform = ''
         }
     }, [isActive, isHover])
-    
+
 
     useEffect(() => {
         document.addEventListener('fullscreenchange', () => {
@@ -118,12 +118,21 @@ const UserTools = observer(({ isActive, fullScreen, centering, cleanCanvas, setC
                     <option value="HORIZONTAL_BAR">—</option>
                 </select>
 
-                <button className="Toolbar__btn" title='Выбрать центр рисунка' onClick={() => { setCentering(!isCentering) }}>
+                <button className="Toolbar__btn" title='Следующий кадр' onClick={() => {
+                    nextFrame()
+                    togglePlaying(false)
+                }}>
                     <svg viewBox="0 0 24 24">
+                        <g id="ic_fluent_arrow_next_24_regular" fill="#fff" fill-rule="nonzero">
+                            <path d="M18.25,3 C18.6296958,3 18.943491,3.28215388 18.9931534,3.64822944 L19,3.75 L19,20.25 C19,20.6642136 18.6642136,21 18.25,21 C17.8703042,21 17.556509,20.7178461 17.5068466,20.3517706 L17.5,20.25 L17.5,3.75 C17.5,3.33578644 17.8357864,3 18.25,3 Z M5.21966991,3.21966991 C5.48593648,2.95340335 5.90260016,2.9291973 6.19621165,3.14705176 L6.28033009,3.21966991 L14.5303301,11.4696699 C14.7965966,11.7359365 14.8208027,12.1526002 14.6029482,12.4462117 L14.5303301,12.5303301 L6.28033009,20.7803301 C5.98743687,21.0732233 5.51256313,21.0732233 5.21966991,20.7803301 C4.95340335,20.5140635 4.9291973,20.0973998 5.14705176,19.8037883 L5.21966991,19.7196699 L12.9393398,12 L5.21966991,4.28033009 C4.9267767,3.98743687 4.9267767,3.51256313 5.21966991,3.21966991 Z">
+                            </path>
+                        </g>
+                    </svg>
+                    {/* <svg viewBox="0 0 24 24">
                         <path d="M18.2848192,17.5777124 L20.8535534,20.1464466 C21.0488155,20.3417088 21.0488155,20.6582912 20.8535534,20.8535534 C20.6582912,21.0488155 20.3417088,21.0488155 20.1464466,20.8535534 L17.5777124,18.2848192 L15.9160251,20.7773501 C15.6899572,21.116452 15.1749357,21.0571624 15.0318354,20.6755617 L12.0318354,12.6755617 C11.8811067,12.2736185 12.2736185,11.8811067 12.6755617,12.0318354 L20.6755617,15.0318354 C21.0571624,15.1749357 21.116452,15.6899572 20.7773501,15.9160251 L18.2848192,17.5777124 Z M17.2312404,17.0782479 L19.4104716,15.6254271 L13.3544004,13.3544004 L15.6254271,19.4104716 L17.0782479,17.2312404 C17.0974475,17.2011742 17.1201804,17.1727128 17.1464466,17.1464466 C17.1727128,17.1201804 17.2011742,17.0974475 17.2312404,17.0782479 L17.2312404,17.0782479 Z M11.5,20 C11.7761424,20 12,20.2238576 12,20.5 C12,20.7761424 11.7761424,21 11.5,21 L5.5,21 C4.11928813,21 3,19.8807119 3,18.5 L3,5.48612181 C3,4.10540994 4.11928813,2.98612181 5.5,2.98612181 L18.5,2.98612181 C19.8807119,2.98612181 21,4.10540994 21,5.48612181 L21,11.5 C21,11.7761424 20.7761424,12 20.5,12 C20.2238576,12 20,11.7761424 20,11.5 L20,5.48612181 C20,4.65769469 19.3284271,3.98612181 18.5,3.98612181 L5.5,3.98612181 C4.67157288,3.98612181 4,4.65769469 4,5.48612181 L4,18.5 C4,19.3284271 4.67157288,20 5.5,20 L11.5,20 Z" fill='#fff' stroke={
                             isCentering ? '#fff' : 'none'
                         } />
-                    </svg>
+                    </svg> */}
                 </button>
                 <button title='На весь экран' className="Toolbar__btn" onClick={fullScreen}>
                     <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
